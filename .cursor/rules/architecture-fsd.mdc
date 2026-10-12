@@ -1,0 +1,23 @@
+---
+description: Feature-Sliced Design layers, slices, segments and public API
+globs: src/**
+alwaysApply: false
+---
+
+# Architecture: FSD
+
+- Layers: `app` > `pages` > `widgets` > `features` > `entities` > `shared`. Import only from lower layers, never from a sibling slice.
+- Outside a slice, import only its `index.ts` through an alias (`@entities/post`, `@shared/ui`, `@shared/lib/redux`); inside a slice, use relative imports.
+- Segments: `ui`, `model`, `api`, `lib`, `config`, and `theme` in `shared`. Never `components`, `hooks`, `types`, `store`, `providers`, `selectors`, `thunks`, `utils`, `helpers`, `constants`.
+- `app` has `state` (createPersistedStore, persistConfigs, StoreProvider, global types), `navigation` (RootNavigator) and `index.tsx`. No `ui`, `providers`, `store` or `types` in `app`.
+- Favorites live only in `features/toggle-favorite`: slice, selectors, `FavoriteToggleButton`. There is no `entities/favorite`.
+- `entities/post` knows nothing about favorites; `PostCard` gets `isHighlighted` and `badgeLabel` as props, and the `posts-list` widget passes the "In favorites" badge.
+- Pages only compose: route params, navigation callbacks, widgets, features and entity views; a page `model` hook may dispatch an entity thunk.
+- `fsd/insignificant-slice` is off on purpose: the single-consumer `posts-list` widget keeps the page thin.
+- `index.ts` files re-export by name; no `index.ts` at the layer level except `src/app/index.tsx`.
+
+Checks:
+- Steiger `configs.recommended` with `--fail-on-warnings`, `fsd/insignificant-slice` off (enabled).
+- ESLint `no-restricted-imports` for deep alias paths (enabled).
+
+Full guide: @docs/ai/guidelines/architecture-fsd.md

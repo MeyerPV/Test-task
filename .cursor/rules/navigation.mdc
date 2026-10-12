@@ -1,0 +1,21 @@
+---
+description: React Navigation 7 native stack, typed routes and where navigation is allowed
+globs: src/app/navigation/**,src/pages/**,src/shared/config/routes.ts
+alwaysApply: false
+---
+
+# Navigation
+
+- `createNativeStackNavigator<RootStackParamList>()` with the dynamic API; screens `Posts` and `PostDetails`.
+- `RootStackParamList` lives in `src/shared/config/routes.ts`, which also augments `ReactNavigation.RootParamList` inside `declare global`.
+- Params carry ids only: `PostDetails: { postId: number }`.
+- Only `src/app/navigation` and `src/pages` use React Navigation. Widgets, features and entities get callbacks such as `onPostPress(postId)`.
+- Pages are typed with `NativeStackScreenProps<RootStackParamList, 'PostDetails'>`; route names are checked keys of the param list.
+- Native headers titled "Posts" and "Post"; theme, `headerTintColor` and `headerTitleStyle` from tokens.
+- `NavigationContainer` lives in `RootNavigator`; no state persistence, no deep links.
+
+Checks:
+- `tsc` for route names and params (enabled).
+- ESLint `no-restricted-imports` for `@react-navigation/*` outside allowed folders (enabled).
+
+Full guide: @docs/ai/guidelines/navigation.md

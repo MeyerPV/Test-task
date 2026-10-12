@@ -1,0 +1,31 @@
+---
+description: FirebirdPosts core rules and workflow, applied to every request
+alwaysApply: true
+---
+
+# FirebirdPosts core
+
+Source of truth is `AGENTS.md`; it wins over guides and over these rules.
+
+Stack: React Native 0.87.1 CLI, New Architecture, Hermes, TypeScript 6 strict, React Navigation 7 native-stack, Redux Toolkit with redux-persist on MMKV, zod 4 for validation, Faker 10, NativeWind 4 on Tailwind 3.4 with clsx, FSD.
+
+Immutable rules:
+1. FSD imports flow downward only; cross-slice imports through `index.ts` and `@app`…`@shared` aliases.
+2. UI primitives come from `src/shared/ui`; extend it instead of using raw React Native primitives.
+3. No comments in code, including TODOs and lint or `@ts-*` directives.
+4. Strict TypeScript: no `any`, no `!`, no `@ts-ignore`, no `as` except `as const`.
+5. React Native CLI only; no Expo packages; native deps support the New Architecture and are allowlisted.
+6. Global state in Redux Toolkit; server data requested once and persisted; restored slices pass a zod schema.
+7. NativeWind `className` on theme tokens; `style` only for runtime values via memoized variables; no inline objects, color literals, arbitrary values.
+8. Named exports only.
+9. Network only through `src/shared/api`; `httpClient.get` validates every response with a zod schema.
+
+Before finishing a change:
+- `npm run verify` passes with zero warnings;
+- the app runs on iOS and Android when UI or native code changed;
+- the prompt is logged in `docs/ai/prompts.md`;
+- commit only when the user asks.
+
+Out of scope: automated tests, i18n, dark mode. Screen reader semantics are in scope: @docs/ai/guidelines/accessibility.md.
+
+Workflow guide: @docs/ai/guidelines/workflow.md

@@ -1,0 +1,28 @@
+---
+description: React Native CLI, New Architecture dependencies and shared/ui reuse
+globs: src/**/*.tsx,index.js,package.json,ios/Podfile,android/**/*.gradle,android/gradle.properties,scripts/check-deps.mjs
+alwaysApply: false
+---
+
+# React Native
+
+- React Native Community CLI only: no `expo`, `expo-*`, `@expo/*`, no `npx expo`.
+- New Architecture and Hermes stay on; never add flags that disable them.
+- Every dependency is on the allowlist in `scripts/check-deps.mjs`. A native package joins it only if:
+  - its peers accept React Native 0.87 and React 19.2;
+  - it supports the New Architecture;
+  - it has no Expo packages in its tree;
+  - both platforms build; run `npm run pods` after `npm install <package>`.
+- Record new packages in the compatibility list of the guide. Ask the user before adding any package.
+- Outside `src/shared/ui`, import from `react-native` only `View`, `FlatList`, `ScrollView`, `Platform`, `useWindowDimensions`, `AccessibilityInfo`; `StatusBar` only in `src/app/index.tsx`.
+- UI comes from `@shared/ui`: `Typography`, `Button`, `Card`, `Badge`, `StarIcon`, `RemoteImage`, `Screen`, `Loader`, `ErrorState`, `EmptyState`.
+- A missing primitive is added to `src/shared/ui` as a generic component first.
+- Safe areas through `SafeAreaProvider`, `Screen` and `useSafeAreaInsets`; no `SafeAreaView` from `react-native`.
+- Buttons have visible text labels; favorite cards show the "In favorites" badge; touch targets use `min-h-touch` and `min-w-touch`.
+- The "ImageBackground is deprecated" warning comes from `react-native-css-interop`; it is known and not suppressed.
+
+Checks:
+- `npm run check:deps`: allowlist and Expo scan of `package-lock.json`, part of `verify`.
+- ESLint `no-restricted-imports`: visual primitives outside `src/shared/ui`, `StatusBar` outside `src/app/index.tsx`, `SafeAreaView` and `StyleSheet` everywhere.
+
+Full guide: @docs/ai/guidelines/react-native.md

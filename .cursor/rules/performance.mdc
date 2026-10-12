@@ -1,0 +1,22 @@
+---
+description: Rendering and bundle performance rules for lists, selectors and images
+globs: src/**/ui/**/*.tsx,src/**/model/**/*.ts,src/shared/lib/image-url/**
+alwaysApply: false
+---
+
+# Performance
+
+- Lists use `FlatList` with data from a memoized selector, a module-level `keyExtractor`, a `useCallback` `renderItem`, and a `memo` item that receives only stable props.
+- `selectPostListItems` (`createSelector`) returns `{ post, isFavorite }`: favorites by ascending id, then the rest in API order. `useAppSelector` callbacks never create arrays or objects.
+- Callbacks passed to memoized children are wrapped in `useCallback` with complete dependencies.
+- No sorting, filtering or mapping of store data in render.
+- Images use explicit token sizes (`imageSize.thumbnail` 32, `imageSize.details` 300 capped by the screen width); the requested size equals the rendered size.
+- Faker is imported only from `@faker-js/faker/locale/en`.
+- No `console` calls in committed code.
+- Toggling a favorite re-renders only the affected item and the order; verify with React DevTools "Highlight updates".
+
+Checks:
+- ESLint `no-console`, `react-hooks/exhaustive-deps`, `react/no-unstable-nested-components` as errors (enabled).
+- `no-restricted-imports` for `@faker-js/faker` and its subpaths except `locale/en` in `image-url` (enabled).
+
+Full guide: @docs/ai/guidelines/performance.md

@@ -1,0 +1,11 @@
+vendor/
+coverage/
+ios/Pods/
+ios/build/
+ios/**/*.xcassets/
+android/.gradle/
+android/build/
+android/app/build/
+android/app/.cxx/
+docs/ai/chats/
+package-lock.json

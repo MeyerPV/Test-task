@@ -1,0 +1,27 @@
+---
+description: Strict TypeScript rules
+globs: **/*.ts,**/*.tsx
+alwaysApply: false
+---
+
+# TypeScript
+
+- TypeScript 6.0.x; do not upgrade to 7.x. `tsconfig.json`: `strict`, `noUncheckedIndexedAccess`, `noImplicitReturns`, `noImplicitOverride`, `noFallthroughCasesInSwitch`, `noUnusedLocals`, `noUnusedParameters`, `types: ["nativewind/types"]`, aliases mirrored in `babel.config.js`.
+- `noUncheckedSideEffectImports` stays on; `global.d.css.ts` declares the `global.css` import.
+- No `any`: untrusted data is `unknown` and is narrowed by a zod schema; validated types come from `z.infer`, never written twice.
+- No non-null assertion `!`: narrow with a condition or return early.
+- No `@ts-ignore`, `@ts-expect-error`, `@ts-nocheck`.
+- No `as` casts except `as const`; use annotations, `satisfies` and schemas.
+- `type` over `interface`; `interface` only for declaration merging of `ReactNavigation.RootParamList` in `src/shared/config/routes.ts`.
+- Type-only imports use `import type`.
+- Request states are discriminated unions: `idle`, `loading`, `succeeded`, `failed` with `error`.
+- Indexed access is `T | undefined`; handle the missing case.
+- `RootState` and `AppDispatch` are global types from `src/app/state/types.ts`; reducers are annotated `Reducer<XState>` to avoid circular types.
+- Exported functions in `api`, `lib` and `model` declare return types.
+
+Checks:
+- `tsc --noEmit`, also in `pre-commit` (enabled).
+- ESLint `@typescript-eslint/no-explicit-any`, `no-non-null-assertion`, `ban-ts-comment`, `consistent-type-imports` (enabled).
+- Typed ESLint: `consistent-type-assertions` (`never`, `as const` allowed), `consistent-type-definitions` (`routes.ts` exempt), `no-unsafe-*` (enabled).
+
+Full guide: @docs/ai/guidelines/typescript.md

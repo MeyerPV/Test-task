@@ -1,0 +1,27 @@
+---
+description: Comments, exports, naming and formatting rules for all code files
+globs: **/*.ts,**/*.tsx,**/*.js,**/*.mjs
+alwaysApply: false
+---
+
+# Code style
+
+- No comments in code: no line, block or JSDoc comments, TODOs, `eslint-disable`, `@ts-*` or triple-slash directives. No exceptions.
+  - Strip template comments when touching a file.
+- Named exports only. `index.ts` re-exports by name; no `export *`.
+  - Exception: `steiger.config.mjs`; CommonJS configs keep `module.exports`.
+- Components are arrow-function constants with an `XProps` type above them, one per file, file named after the component.
+- Naming:
+  - PascalCase components;
+  - `useX` hooks, `xSlice.ts`, `selectX`, `fetchX`;
+  - past-tense actions; `is`/`has`/`should` booleans;
+  - `UPPER_SNAKE_CASE` config constants, kebab-case slices.
+- Prettier formatting with the template config: `npx prettier --write <touched files>`.
+- No `console`, no unused code; scripts print through `process.stdout`. UI copy is English, inline in `ui` files.
+- Prefer early returns over nested conditions.
+
+Checks:
+- `no-console`, `@typescript-eslint/no-unused-vars`, lint-staged on commit (enabled).
+- ESLint `local-rules/no-comments` with `noInlineConfig`, `no-restricted-syntax` for default and wildcard exports, `npm run format:check` (enabled).
+
+Full guide: @docs/ai/guidelines/code-style.md

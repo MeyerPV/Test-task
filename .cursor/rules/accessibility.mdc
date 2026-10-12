@@ -1,0 +1,24 @@
+---
+description: Screen reader semantics, announcements, touch targets and contrast
+globs: src/**/ui/**/*.tsx,src/shared/theme/tokens.ts
+alwaysApply: false
+---
+
+# Accessibility
+
+- Every interactive element has a role, a label and, when the result is not obvious, a hint. `Button` label equals its visible text; `accessibilityState` carries `selected` and `disabled`.
+- A `Card` is one focus stop with one label and a hint: `PostCard` passes the title plus the badge text and "Opens post details".
+- Decorative content is hidden: `RemoteImage` without `accessibilityLabel`, `StarIcon` always.
+- Headings: `Typography` with `asHeader` gives role `header`; the details title uses it.
+- Announce state changes: `Loader` is a busy `progressbar` with a polite live region; `ErrorState` is an `alert` with an assertive live region and an iOS announcement; `FavoriteToggleButton` announces "Added to favorites" or "Removed from favorites".
+- The posts `FlatList` has role `list` and the label "Posts"; `EmptyState` has role `summary`.
+- Meaning never depends on color alone: favorites show the "In favorites" badge and include it in the card label.
+- Touch targets at least 44 points (`min-h-touch`, `min-w-touch`); font scaling stays on except for decorative glyphs.
+- Text contrast meets WCAG AA 4.5:1; check a new color token against its backgrounds.
+- Copy describes results ("Opens post details", "Sends the request again"); errors come from `getErrorMessage`.
+
+Checks:
+- Review of `src/shared/ui` and new interactive elements.
+- Manual VoiceOver and TalkBack pass when UI changes. No a11y lint plugin, by the user's decision in P-05.
+
+Full guide: @docs/ai/guidelines/accessibility.md

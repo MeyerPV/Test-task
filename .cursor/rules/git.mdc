@@ -1,0 +1,25 @@
+---
+description: Commit conventions, hooks, lockfiles and AI artifacts; read before committing
+globs: .husky/**,.gitignore,package.json,docs/ai/prompts.md,docs/ai/chats/**
+alwaysApply: false
+---
+
+# Git
+
+- The repository root is the workspace root `Firebird-test/`, with no nested project folder. The task PDF in the root is not committed (`*.pdf` in `.gitignore`).
+- History is linear on `main`; optional short branches `stage-<n>-<topic>` are merged by fast-forward.
+- Conventional Commits in English: `type(scope): summary`.
+  - Types: `feat`, `fix`, `refactor`, `perf`, `build`, `chore`, `docs`.
+  - Scope: an FSD slice or area.
+  - Imperative summary, at most 72 characters; the body cites requirement IDs and the stage.
+- One logical change per commit, together with its docs and prompt-log entry.
+- Hooks: `pre-commit` runs lint-staged (ESLint on staged files) and `npm run typecheck`, `pre-push` runs `npm run verify`. Never `--no-verify` or `HUSKY=0`.
+- Commit `package-lock.json`, `Gemfile.lock`, `ios/Podfile.lock`. Ignore `node_modules`, `ios/Pods`, build outputs, `.env*`, logs, `*.pdf`.
+- Commit AI artifacts: `docs/ai/prompts.md` entries and exports in `docs/ai/chats/`.
+- Commit and push only when the user asks. No force-push to `main`, no rewriting pushed history, no secrets.
+
+Checks:
+- husky `pre-commit` and `pre-push` (installed in stage 2).
+- Commit messages by review.
+
+Full guide: @docs/ai/guidelines/git.md

@@ -1,0 +1,28 @@
+---
+description: HTTP access, response validation, fetch-once thunks and Faker image generation
+globs: src/shared/api/**,src/**/api/**,src/**/model/schemas.ts,src/entities/post/lib/**,src/entities/post/model/thunks.ts,src/shared/lib/image-url/**
+alwaysApply: false
+---
+
+# Data fetching
+
+- Network only through `src/shared/api`. The transport is the global `fetch`; no axios or other clients.
+- `httpClient.get(path, schema, { signal })` returns `Promise<z.output<typeof schema>>`; it throws `HttpError` with `status` on non-2xx and `ResponseParseError` on invalid JSON or a failed `schema.safeParse`. No timeout, no retry.
+- `getErrorMessage(error)` turns any error into user-facing text; status codes are never shown.
+- Response schemas live in the `api` segment: `postDtoSchema`, `postDtoListSchema`, `createPostByIdDtoSchema(postId)` (rejects a mismatched `id`). `PostDto` is `z.infer<typeof postDtoSchema>`; no casts, no hand-written guards.
+- `import { z } from 'zod'` only in `src/shared/api`, `api` and `model` segments, `src/app/state`; no `zod/*` entries, no `z.url()` (the React Native `URL` polyfill lacks `hostname`), image URLs use `z.string().startsWith('https://')`.
+- Thunks on `createAppAsyncThunk` use `condition`, so each request runs once:
+  - `fetchPosts` skips when persisted `ids` exist, the request succeeded, or it is `loading`;
+  - `fetchPostDetails` skips when `detailsById[postId]` exists or its request is `loading`.
+- `fulfilled` reducers never overwrite existing data.
+- Faker images are created once inside the thunk: `mapPost(dto, createImageUrl(imageSize.thumbnail))`, `mapPostDetails(dto, createImageUrl(imageSize.details))`. Mappers are pure; never generate images in reducers, selectors or components.
+- `createImageUrl(size)` uses `faker.image.urlPicsumPhotos({ width: size, height: size, grayscale: false, blur: 0 })` from `@faker-js/faker/locale/en`.
+- Errors: `rejectWithValue(getErrorMessage(error))`, stored only in non-persisted request state; an aborted thunk returns to `idle`; `ErrorState` Retry dispatches the same thunk.
+- Details render only `detailsById[postId]`.
+- No RTK Query, TanStack Query, SWR, pull-to-refresh, NetInfo retries or polling.
+
+Checks:
+- Manual network check: one `GET /posts` on first launch, zero after restart, identical image URLs.
+- ESLint `no-restricted-globals` and `no-restricted-properties` outside `src/shared/api`, `no-restricted-imports` (HTTP clients, query libraries, Faker only in `image-url`, `image-url` only in `entities/post/model/thunks.ts`, `zod` only in the schema folders, no `zod/*`), typed `no-unsafe-*` (enabled).
+
+Full guide: @docs/ai/guidelines/data-fetching.md

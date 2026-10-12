@@ -1,0 +1,23 @@
+---
+description: NativeWind styling on theme tokens
+globs: src/**/*.tsx,tailwind.config.js,global.css,metro.config.js,babel.config.js,src/shared/theme/**
+alwaysApply: false
+---
+
+# Styling (NativeWind)
+
+- NativeWind 4.2 on Tailwind 3.4 is the only styling method. `tailwind.config.js` sets `colors`, `spacing`, `borderRadius`, `borderWidth`, `opacity`, `fontSize` from `src/shared/theme/tokens.ts` without `extend`; only `minHeight.touch` and `minWidth.touch` extend.
+- `tokens.ts` is the single source for JS too: navigation theme, `ActivityIndicator` color, `android_ripple`, image sizes, through `@shared/theme`.
+- `className` for static styles with token classes only: `bg-canvas`, `text-ink`, `p-lg`, `rounded-md`, `min-h-touch`.
+- `style` only for runtime values (safe-area insets, screen width), passed as a memoized variable; never an inline object or array.
+- Variants are module-level typed class maps: `Record<Variant, string>` with `as const satisfies`.
+- Conditional classes through `clsx`; no interpolated class names.
+- No arbitrary values in square brackets, no color literals outside `tokens.ts`, no `StyleSheet`.
+- The favorite highlight is `bg-favorite border-favorite-outline` plus the "In favorites" badge from the `posts-list` widget.
+- A new visual value means a new token, never a one-off class. Restart Metro with `--reset-cache` after token or config changes.
+
+Checks:
+- `react-native/no-inline-styles`, `react-native/no-color-literals`, eslint-plugin-tailwindcss `no-custom-classname`, `no-arbitrary-value`, `no-contradicting-classname`, `classnames-order` (enabled). Strings inside class maps are not linted; review them.
+- ESLint `no-restricted-syntax` for literal `style` and `*Style` values, color strings outside `tokens.ts` and interpolated classes; `no-restricted-imports` for `StyleSheet` (enabled).
+
+Full guide: @docs/ai/guidelines/styling.md

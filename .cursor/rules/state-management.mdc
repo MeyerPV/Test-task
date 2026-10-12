@@ -1,0 +1,32 @@
+---
+description: Redux Toolkit slices, redux-persist on MMKV, store creation and typed hooks
+globs: src/**/model/**,src/app/state/**,src/shared/lib/redux/**,src/shared/lib/storage/**
+alwaysApply: false
+---
+
+# State management
+
+- Global state only in Redux Toolkit slices. No Zustand, MobX, Jotai, Recoil, Valtio or context for app data.
+- Two slices:
+  - `posts` in `entities/post/model/postsSlice.ts`;
+  - `favorites` (`ids: number[]`) in `features/toggle-favorite/model/favoritesSlice.ts`.
+- `posts` state: adapter `ids` and `entities`, `detailsById`, `listRequest`, `detailsRequestById`; `RequestState` is `idle`, `loading`, `succeeded`, `failed` with `error`.
+- `Post`, `PostDetails` and `FavoritesState` are `z.infer` of the schemas in the `model/schemas.ts` files.
+- One `persistReducer` per slice:
+  - posts: whitelist `POSTS_PERSIST_KEYS` = `persistedPostsSchema.keyof().options` = `ids`, `entities`, `detailsById`;
+  - favorites: the whole slice.
+- Request states are never persisted.
+- Every persist config has `timeout: 0`, so an empty store cannot request the network before `REHYDRATE`, plus `version: 1` and `createValidatedMigrate(schema)`: `createMigrate({})`, then `schema.safeParse`; invalid storage resolves `undefined` and the slice starts empty.
+- A persisted shape change bumps the version, adds a migration and updates the schema together.
+- The store is created inside `StoreProvider` through `useState(createPersistedStore)`, never at module level.
+- `PersistGate` with `Loader` wraps everything that reads data or dispatches thunks.
+- `serializableCheck` ignores `FLUSH`, `REHYDRATE`, `PAUSE`, `PERSIST`, `PURGE`, `REGISTER`.
+- `RootState` and `AppDispatch` are global types from `src/app/state/types.ts`; exported reducers are annotated `Reducer<XState>` to avoid circular types.
+- Use `useAppDispatch`, `useAppSelector`, `createAppAsyncThunk` from `@shared/lib/redux`; raw react-redux hooks only there.
+- Reducers are pure: no Faker, time or randomness. Actions are past-tense events (`favoriteToggled`).
+
+Checks:
+- `tsc` for the state shape and global types (enabled).
+- ESLint `no-restricted-imports` (other state libraries, AsyncStorage, raw hooks, MMKV outside storage, zod outside `api`, `model` and `app/state`), `no-restricted-syntax` for top-level `configureStore` and `persistStore`, `check:deps` (enabled).
+
+Full guide: @docs/ai/guidelines/state-management.md
