@@ -1,97 +1,127 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# FirebirdPosts
 
-# Getting Started
+Тестовое задание на React Native: список постов из [JSONPlaceholder](https://jsonplaceholder.typicode.com), экран поста и избранное. Приложение собрано на React Native CLI без Expo, на TypeScript и Redux Toolkit. Код написан только ИИ-агентами, промпты и правила для них лежат в репозитории.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+Интерфейс на английском.
 
-## Step 1: Start Metro
+## Что умеет приложение
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+| ID  | Требование                                                                                  | Как сделано                                                                                                                                                                                |
+| --- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| F1  | Экран Posts показывает `GET /posts`, у каждого поста картинка 32×32 из Faker                | `fetchPosts` в `src/entities/post/model/thunks.ts` загружает список и один раз создаёт для каждого поста `thumbnailUrl` через `faker.image.urlPicsumPhotos`                                |
+| F2  | Экран Post показывает `GET /posts/{id}` с картинкой 300×300 из Faker                        | `fetchPostDetails` загружает пост отдельным запросом и создаёт `imageUrl`, независимый от превью в списке                                                                                  |
+| F3  | Кнопка на экране поста добавляет его в избранное, повторное нажатие убирает                 | `FavoriteToggleButton` в `src/features/toggle-favorite` переключает id в слайсе избранного; подпись меняется с «Add to favorites» на «Remove from favorites»                               |
+| F4  | Избранные посты выделены и стоят в начале списка по возрастанию `id`                        | `selectPostListItems` в `src/widgets/posts-list` ставит избранные первыми по `id`, остальные идут в порядке API; у карточки цвет фона и рамки избранного и бейдж «In favorites» со звездой |
+| F5  | Список запрашивается один раз и не обновляется, каждая картинка Faker создаётся один раз    | `condition` у thunk не отправляет запрос, если данные уже есть или запрос уже идёт; редьюсер не перезаписывает сохранённые посты, поэтому URL картинок не меняются                         |
+| F6  | После перезапуска данные восстанавливаются без запросов, избранное отмечено с первого кадра | `redux-persist` хранит посты, детали и избранное в MMKV; восстановленные данные проверяются схемами zod; `PersistGate` показывает список только после чтения хранилища                     |
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+Если сохранённые данные повреждены, они не проходят схему zod. Слайс начинает с пустого состояния, и список загружается заново одним запросом.
+
+## Стек
+
+- React Native 0.87.1 на React Native Community CLI 20.2, New Architecture и Hermes.
+- TypeScript 6 в strict-режиме.
+- React Navigation 7, native stack.
+- Redux Toolkit 2, react-redux 9, redux-persist 6 поверх react-native-mmkv 4.
+- zod 4 для проверки ответов API и восстановленного состояния.
+- `@faker-js/faker` 10 для ссылок на картинки.
+- NativeWind 4 на Tailwind CSS 3.4 с токенами темы из `src/shared/theme`.
+- ESLint, Steiger для FSD, Prettier, husky и lint-staged.
+
+## Требования к окружению
+
+Общие:
+
+- Node `^22.22.1 || ^24.3.0`, npm 10 или новее.
+- Свободный порт 8081 для Metro или Metro на другом порту, см. раздел «Если что-то пошло не так».
+
+iOS, только на macOS:
+
+- Xcode 26 и симулятор iOS. Проверено на iPhone 17.
+- Ruby с Bundler: CocoaPods ставится из `Gemfile`. Без Bundler подойдёт установленный глобально CocoaPods.
+
+Android:
+
+- JDK 17, на него указывает `JAVA_HOME`.
+- Android SDK Platform 37, Build-Tools 37.0.0 и NDK 27.1.12297006; приложение собирается с `compileSdk 37`, `targetSdk 36` и `minSdk 24`.
+- Эмулятор или устройство. Проверено на эмуляторе `Medium_Phone_API_36.1`.
+
+Окружение проверяет `npx react-native doctor`. Как поставить всё с нуля, описано в [руководстве React Native](https://reactnative.dev/docs/set-up-your-environment).
+
+## Установка и запуск
 
 ```sh
-# Using npm
-npm start
-
-# OR using Yarn
-yarn start
-```
-
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+git clone https://github.com/MeyerPV/Test-task.git
+cd Test-task
+npm install
 npm run ios
-
-# OR using Yarn
-yarn ios
+npm run android
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+`npm install` ставит зависимости и git-хуки husky. На macOS он затем запускает `scripts/install-pods.mjs`: `bundle install` и `bundle exec pod install`, а если Bundler недоступен, глобальный `pod install`. На CI и на других ОС поды пропускаются.
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+`npm run ios` и `npm run android` собирают приложение, запускают его на симуляторе или эмуляторе и открывают Metro в отдельном окне терминала, если он ещё не запущен.
 
-## Step 3: Modify your app
+## Если что-то пошло не так
 
-Now that you have successfully run the app, let's make changes!
+- **`pod install` оборвался**, например из-за сети при загрузке собранного ядра React Native: запустите `npm run pods`, затем `npm run ios`.
+- **Первая сборка Android падает при загрузке Gradle**: повторите `npm run android`. Таймаут загрузки дистрибутива Gradle поднят до 120 секунд в `android/gradle/wrapper/gradle-wrapper.properties`, но очень медленная сеть может не уложиться и в него.
+- **Gradle сообщает о неподходящей Java**: `JAVA_HOME` должен указывать на JDK 17.
+- **Порт 8081 занят**: запустите `npm start -- --port 8082`, затем в другом терминале `npm run ios -- --port 8082` или `npm run android -- --port 8082`. Собранное ядро React Native на iOS всё равно обращается к 8081, поэтому симулятору порт указывается отдельно:
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+  ```sh
+  xcrun simctl spawn booted defaults write com.firebird.posts RCT_jsLocation -string "localhost:8082"
+  ```
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+- **Изменения в `babel.config.js`, `tailwind.config.js`, `global.css` или токенах темы не видны**: перезапустите Metro с `npm start -- --reset-cache`.
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+Остальные заметки по нативной сборке собраны в [`docs/ai/guidelines/workflow.md`](docs/ai/guidelines/workflow.md#native-build-notes).
 
-## Congratulations! :tada:
+## Как проверить требования вручную
 
-You've successfully run and modified your React Native App. :partying_face:
+1. Запустите приложение и откройте React Native DevTools клавишей `j` в терминале Metro, вкладка Network. При первом запуске уходит один `GET /posts`, список показывает посты с картинками 32×32.
+2. Откройте пост. Уходит один `GET /posts/{id}`, экран показывает картинку 300×300, заголовок и текст.
+3. Нажмите «Add to favorites». Подпись кнопки сменится на «Remove from favorites». Вернитесь к списку: пост стоит в начале, выделен и помечен бейджем «In favorites». Несколько избранных постов идут по возрастанию `id`.
+4. Нажмите кнопку на экране поста ещё раз: пост уходит из избранного и возвращается на своё место в списке.
+5. Закройте приложение полностью и откройте снова. Список и избранное появляются сразу, картинки те же, во вкладке Network нет новых запросов. Уже открытые посты тоже открываются без запросов.
 
-### Now what?
+## Скрипты
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+| Команда                           | Что делает                                                                                    |
+| --------------------------------- | --------------------------------------------------------------------------------------------- |
+| `npm install`                     | Ставит зависимости, хуки husky и, на macOS, поды                                              |
+| `npm run ios` / `npm run android` | Собирает и запускает приложение, запускает Metro                                              |
+| `npm start`                       | Запускает только Metro                                                                        |
+| `npm run pods`                    | Ставит поды заново тем же скриптом, в том числе на CI                                         |
+| `npm run verify`                  | Типы, ESLint, Steiger, Prettier и проверка зависимостей; проходит без ошибок и предупреждений |
 
-# Troubleshooting
+Хук `pre-commit` прогоняет ESLint по индексированным файлам и запускает `npm run typecheck`, хук `pre-push` запускает `npm run verify`. Автотестов в проекте нет, они вне рамок задания.
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+## Архитектура
 
-# Learn More
+Код в `src/` разложен по слоям [Feature-Sliced Design](https://feature-sliced.design). Слой импортирует только слои ниже себя, срезы связаны через свой `index.ts`.
 
-To learn more about React Native, take a look at the following resources:
+| Слой       | Что внутри                                                                                         |
+| ---------- | -------------------------------------------------------------------------------------------------- |
+| `app`      | Точка входа, стор с redux-persist и проверкой восстановленных данных, навигация                    |
+| `pages`    | Экраны `posts` и `post-details`: связывают навигацию, виджеты и фичи                               |
+| `widgets`  | `posts-list`: порядок списка, выделение избранного, состояния загрузки, ошибки и пустого списка    |
+| `features` | `toggle-favorite`: слайс избранного, селекторы и кнопка                                            |
+| `entities` | `post`: схемы ответов API, запросы, слайс постов, thunk с картинками Faker, карточка и экран поста |
+| `shared`   | HTTP-клиент с проверкой ответов, конфигурация, токены темы, хранилище MMKV, UI-примитивы           |
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Сеть идёт только через `src/shared/api`: `httpClient.get` принимает схему zod и возвращает только проверенные данные. Карта всех файлов в [`docs/ai/guidelines/architecture-fsd.md`](docs/ai/guidelines/architecture-fsd.md).
+
+VoiceOver и TalkBack поддерживаются: у интерактивных элементов есть роли, подписи и подсказки, изменения состояния объявляются. Правила в [`docs/ai/guidelines/accessibility.md`](docs/ai/guidelines/accessibility.md).
+
+## Разработка с ИИ
+
+- [`AGENTS.md`](AGENTS.md): единый источник правил для Cursor, Claude Code и Codex. В нём проект, стек, команды, неизменяемые правила и критерии готовности. `CLAUDE.md` подключает его для Claude Code.
+- [`docs/ai/guidelines/`](docs/ai/guidelines): подробные правила по областям с примерами и инструментом, который проверяет каждое правило.
+- [`.cursor/rules/`](.cursor/rules): короткие правила Cursor со ссылками на гайды.
+- [`docs/ai/prompts.md`](docs/ai/prompts.md): все промпты дословно, по этапам, с результатом каждого.
+- [`docs/ai/chats/`](docs/ai/chats): выгрузки диалогов с агентами и скриншоты; как их выгружать и называть, описано в [`docs/ai/chats/README.md`](docs/ai/chats/README.md).
+
+## Вне рамок
+
+Автотесты, локализация, тёмная тема, pull-to-refresh, таймауты запросов, автоматические повторы и библиотеки дискового кэша картинок. При ошибке загрузки экран показывает кнопку «Retry», которая отправляет запрос ещё раз.

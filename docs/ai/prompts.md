@@ -450,7 +450,8 @@ No entries yet.
   - `docs/review.md`, a local review of the project against the task, stays out of the repository. It is formatted with Prettier, because `verify` checks untracked files too, and listed in `.gitignore`. The selected option is the second block below, verbatim.
   - The whole project is one commit on `main`: the template, quality gates, the code of stages 3 and 4, and the AI rules and docs. The message follows `git.md`. Hooks ran: lint-staged and `typecheck` on commit, `verify` on push.
   - `origin` is `https://github.com/MeyerPV/Test-task.git`, and `main` is pushed with upstream tracking.
-  - `README.md` is still the template one; stage 6 rewrites it.
+  - The agent's `git push` was rejected with 403: the macOS keychain held a GitHub account without write access to the repository. The user authenticated and pushed `main` as one commit.
+  - `README.md` is still the template one; P-15 rewrites it.
   - Requirements: T6 (repository; README pending), A2.
 
 ```text
@@ -462,4 +463,21 @@ git push -u origin main
 
 ```text
 Не коммитить: отформатировать Prettier (только пробелы и выравнивание таблиц) и добавить docs/review.md в .gitignore (Recommended)
+```
+
+### P-15. Project README and the Gradle download timeout
+
+- Date: 2026-10-12
+- Stage: 6
+- Tool and model: Cursor Agent / Claude Opus 5.5
+- Chat export: pending, see `docs/ai/chats/README.md`
+- Outcome:
+  - The prompt refers to the local review `docs/review.md`. Its item 1 is the README, item 2 is the GitHub push done in P-14, item 4 is the Gradle timeout.
+  - `README.md` replaces the CLI template with a Russian description of the project. It covers the F1–F6 table with the code behind each requirement, the stack, environment requirements, `npm install` and `npm run ios` or `npm run android`, troubleshooting (`npm run pods` after a broken `pod install`, the Gradle download, `JAVA_HOME`, a busy port 8081, `--reset-cache`), a manual check of F1–F6 in the DevTools Network panel, scripts and hooks, the FSD layers, accessibility and links to the AI artifacts.
+  - `networkTimeout` in `android/gradle/wrapper/gradle-wrapper.properties` goes from 10000 to 120000 ms; `./gradlew --version` still starts Gradle 9.4.1 on JDK 17. `workflow.md` explains why, and why a wrapper upgrade needs the value set again.
+  - `AGENTS.md`: the stack lists Android SDK Platform 37, because `android/build.gradle` sets `compileSdk 37`, not 36; the status names what remains of stages 5 and 6.
+  - Requirements: T6, A2.
+
+```text
+@docs/review.md сделай пункты 1 и 4, пункт 2 сделан
 ```

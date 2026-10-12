@@ -24,7 +24,7 @@ FirebirdPosts is a React Native test task: a list of posts, a details screen and
 | T6    | GitHub repository with README; `npm install` installs everything, `npm run ios` or `npm run android` runs the app |
 | A1–A2 | Built with AI agents only; chat exports in `docs/ai/chats/`, prompts in `docs/ai/prompts.md`, rules in this repo  |
 
-Status: stages 1 and 2 are done: the React Native template lives in the root, Jest is removed, quality gates are in place (compiler flags, aliases, ESLint, Steiger, `verify`, husky with lint-staged, pods in `postinstall`), and NativeWind 4 on theme tokens is the only styling method. The code of stages 3 and 4 is written: `shared`, `entities/post`, `features/toggle-favorite`, `widgets/posts-list`, both pages and `app`; F1–F6 are checked by hand on iOS and Android. The automated checks of stages 3 and 4 are enabled, see the table below. The code is on GitHub at `https://github.com/MeyerPV/Test-task`. Stages 5 and 6 remain: edge cases by hand, README and delivery.
+Status: stages 1 and 2 are done: the React Native template lives in the root, Jest is removed, quality gates are in place (compiler flags, aliases, ESLint, Steiger, `verify`, husky with lint-staged, pods in `postinstall`), and NativeWind 4 on theme tokens is the only styling method. The code of stages 3 and 4 is written: `shared`, `entities/post`, `features/toggle-favorite`, `widgets/posts-list`, both pages and `app`; F1–F6 are checked by hand on iOS and Android. The automated checks of stages 3 and 4 are enabled, see the table below. Stage 6 has started: the code is on GitHub at `https://github.com/MeyerPV/Test-task`, and `README.md` describes the project, setup, troubleshooting and the manual check of F1–F6. Remaining: stage 5 edge cases by hand, then chat exports with screenshots and a fresh-clone check.
 
 Out of scope: automated tests, i18n (UI copy is English), dark mode, pull-to-refresh, request timeouts, automatic retries, image disk-cache libraries. Screen reader semantics are in scope, see `docs/ai/guidelines/accessibility.md`.
 
@@ -38,7 +38,7 @@ Out of scope: automated tests, i18n (UI copy is English), dark mode, pull-to-ref
 - zod 4 for runtime validation of API responses and persisted state, imported as `import { z } from 'zod'`; `@babel/plugin-transform-export-namespace-from` lets Metro transform its `export * as` syntax.
 - NativeWind 4.2 with Tailwind CSS 3.4, react-native-reanimated 4 and react-native-worklets as NativeWind peers, clsx 2 for conditional classes.
 - Tooling: ESLint 8.57 with `@react-native/eslint-config`, eslint-plugin-tailwindcss 3.18, eslint-plugin-local-rules, Prettier 2.8, Steiger with `@feature-sliced/steiger-plugin`, husky 9, lint-staged.
-- Node `^22.22.1 || ^24.3.0`, Xcode 26 with CocoaPods, JDK 17, Android SDK 36.
+- Node `^22.22.1 || ^24.3.0`, Xcode 26 with CocoaPods, JDK 17, Android SDK Platform 37 with Build-Tools 37.0.0 and NDK 27.1 (`compileSdk 37`, `targetSdk 36`, `minSdk 24`).
 
 ## Commands
 

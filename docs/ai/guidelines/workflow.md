@@ -149,6 +149,7 @@ No rule is disabled or downgraded. Configuration choices that are not obvious fr
   xcrun simctl spawn booted defaults write com.firebird.posts RCT_jsLocation -string "localhost:8082"
   ```
 
+- `networkTimeout` in `android/gradle/wrapper/gradle-wrapper.properties` is 120000 ms. The template's 10000 aborts the first download of the Gradle distribution on a slow network. `./gradlew wrapper` regenerates the file on a Gradle upgrade and resets the value, so set it again afterwards.
 - An agent sandbox may set its own `GRADLE_USER_HOME`, which downloads the Gradle distribution and dependencies again. Run Android builds with `GRADLE_USER_HOME=$HOME/.gradle` and `JAVA_HOME` on JDK 17.
 - The Definition of Done network check uses the React Native DevTools Network panel. An agent can read the same data through Metro's inspector: `GET /json/list` lists the targets, and the WebSocket needs an `Origin` header with the Metro URL, otherwise Metro answers 401.
 - Corrupted-storage check after a change to a schema or a persist config: through the inspector, write an `http://` thumbnail into `persist:posts` and duplicate ids into `persist:favorites` of the MMKV instance `firebird-posts`, then reload. Expected: one `GET /posts`, new image URLs, empty favorites; the next reload sends nothing.
