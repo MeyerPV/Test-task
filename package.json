@@ -6,6 +6,8 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "run": "node scripts/run-app.mjs",
+    "start:project:ios": "npm i && react-native run-ios",
+    "start:project:android": "npm i && react-native run-android",
     "start": "react-native start",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --max-warnings=0",

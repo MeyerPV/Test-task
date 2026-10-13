@@ -592,3 +592,23 @@ git push -u origin main
 
 создай md в этом проекте
 ```
+
+### P-21. README title and the two start commands
+
+- Date: 2026-10-13
+- Stage: 6
+- Tool and model: Cursor Agent / Claude Opus 5.5
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
+- Outcome:
+  - `README.md` is titled Test-task. Installation and launch are the first section: `npm run start:project:ios` and `npm run start:project:android`, the scripts from `package.json`.
+  - The scripts table lists the same two commands.
+  - Requirements: T6.
+
+```text
+обнови@README.md  и убери FirebirdPosts, просто название Test-task
+
+установка и запуск в самом верху сделай
+
+и вот эти 2 команды вставь туда
+@package.json (9-10)
+```

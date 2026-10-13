@@ -1,4 +1,21 @@
-# FirebirdPosts
+# Test-task
+
+## Установка и запуск
+
+```sh
+git clone https://github.com/MeyerPV/Test-task.git
+cd Test-task
+// install node_modules & run on ios
+npm run start:project:ios
+// install node_modules & run on android
+npm run start:project:android
+```
+
+На macOS запустите `npm run start:project:ios`. На остальных ОС запустите `npm run start:project:android`.
+
+`npm run start:project:ios` выполняет `npm i && react-native run-ios`. `npm run start:project:android` выполняет `npm i && react-native run-android`.
+
+`npm i` ставит зависимости и git-хуки husky. На macOS он затем запускает `scripts/install-pods.mjs`: `bundle install` и `bundle exec pod install`, а если Bundler недоступен, глобальный `pod install`. На CI и на других ОС поды пропускаются. Команда сборки запускает приложение на симуляторе или эмуляторе и открывает Metro в отдельном окне терминала, если он ещё не запущен.
 
 Тестовое задание на React Native: список постов из [JSONPlaceholder](https://jsonplaceholder.typicode.com), экран поста и избранное. Приложение собрано на React Native CLI без Expo, на TypeScript и Redux Toolkit. Код написан только ИИ-агентами, промпты и правила для них лежат в репозитории.
 
@@ -48,19 +65,6 @@ Android:
 
 Окружение проверяет `npx react-native doctor`. Как поставить всё с нуля, описано в [руководстве React Native](https://reactnative.dev/docs/set-up-your-environment).
 
-## Установка и запуск
-
-```sh
-git clone https://github.com/MeyerPV/Test-task.git
-cd Test-task
-npm install
-npm run
-```
-
-`npm install` ставит зависимости и git-хуки husky. На macOS он затем запускает `scripts/install-pods.mjs`: `bundle install` и `bundle exec pod install`, а если Bundler недоступен, глобальный `pod install`. На CI и на других ОС поды пропускаются.
-
-`npm run` запускает `scripts/run-app.mjs`: на macOS это `npm run ios`, на остальных ОС `npm run android`. Команда собирает приложение, запускает его на симуляторе или эмуляторе и открывает Metro в отдельном окне терминала, если он ещё не запущен. `npm run ios` и `npm run android` запускают нужную платформу напрямую.
-
 ## Если что-то пошло не так
 
 - **`pod install` оборвался**, например из-за сети при загрузке собранного ядра React Native: запустите `npm run pods`, затем `npm run ios`.
@@ -88,6 +92,8 @@ npm run
 
 | Команда                           | Что делает                                                                                    |
 | --------------------------------- | --------------------------------------------------------------------------------------------- |
+| `npm run start:project:ios`       | Ставит зависимости и запускает iOS: `npm i && react-native run-ios`                           |
+| `npm run start:project:android`   | Ставит зависимости и запускает Android: `npm i && react-native run-android`                   |
 | `npm install`                     | Ставит зависимости, хуки husky и, на macOS, поды                                              |
 | `npm run`                         | Запускает iOS на macOS и Android на остальных ОС                                              |
 | `npm run ios` / `npm run android` | Собирает и запускает приложение на выбранной платформе, запускает Metro                       |
