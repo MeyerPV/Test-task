@@ -26,6 +26,7 @@ export const persistedPostsSchema = z
     ids: z.array(postIdSchema),
     entities: z.record(postIdSchema, postSchema),
     detailsById: z.record(postIdSchema, postDetailsSchema),
+    isListLoaded: z.boolean(),
   })
   .refine(
     ({ ids, entities }) => ids.every(id => entities[id] !== undefined),

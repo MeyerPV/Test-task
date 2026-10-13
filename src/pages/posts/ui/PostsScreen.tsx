@@ -8,7 +8,7 @@ type PostsScreenProps = NativeStackScreenProps<RootStackParamList, 'Posts'>;
 
 export const PostsScreen = ({ navigation }: PostsScreenProps) => {
   const handlePostPress = useCallback(
-    (postId: number) => navigation.navigate('PostDetails', { postId }),
+    (postId: number) => navigation.navigate('DetailsScreen', { postId }),
     [navigation],
   );
 

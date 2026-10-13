@@ -11,7 +11,7 @@ import { usePostDetails } from '../model/usePostDetails';
 
 type DetailsScreenProps = NativeStackScreenProps<
   RootStackParamList,
-  'PostDetails'
+  'DetailsScreen'
 >;
 
 export const DetailsScreen = ({ route }: DetailsScreenProps) => {

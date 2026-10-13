@@ -14,7 +14,7 @@ Redux Toolkit is the only global state. redux-persist stores data slices in MMKV
 
 3. **State shape.**
 
-   - `posts`: `ids` and `entities` from `createEntityAdapter<Post>`, `detailsById: Record<number, PostDetails>`, `listRequest: RequestState`, `detailsRequestById: Record<number, RequestState>`.
+   - `posts`: `ids` and `entities` from `createEntityAdapter<Post>`, `detailsById: Record<number, PostDetails>`, `isListLoaded: boolean`, `listRequest: RequestState`, `detailsRequestById: Record<number, RequestState>`.
    - `RequestState` is `idle`, `loading`, `succeeded` or `failed` with a user-facing `error` string.
    - `favorites`: `ids: number[]` in toggle order. The screen order is derived in selectors, never stored.
    - `Post` and `PostDetails` are inferred from `postSchema` and `postDetailsSchema` in `entities/post/model/schemas.ts`, `FavoritesState` from `favoritesStateSchema` in `features/toggle-favorite/model/schemas.ts`.
@@ -23,17 +23,18 @@ Redux Toolkit is the only global state. redux-persist stores data slices in MMKV
 
 4. **`persistReducer` per slice; posts persist data only.**
 
-   - `posts`: whitelist `POSTS_PERSIST_KEYS` exported by the entity: `['ids', 'entities', 'detailsById']`, taken from `persistedPostsSchema.keyof().options`, so the whitelist and the schema cannot drift apart.
+   - `posts`: whitelist `POSTS_PERSIST_KEYS` exported by the entity: `['ids', 'entities', 'detailsById', 'isListLoaded']`, taken from `persistedPostsSchema.keyof().options`, so the whitelist and the schema cannot drift apart.
    - `favorites`: the whole slice, it holds only `ids`.
 
-   Request states are never persisted, so a failed request writes nothing to storage. The persisted `ids` and `detailsById` are the fetch-once guard, see `data-fetching.md`. Checked by review of `src/app/state/persistConfigs.ts`.
+   Request states are never persisted, so a failed request writes nothing to storage. The persisted `isListLoaded` and `detailsById` are the fetch-once guard, see `data-fetching.md`. Checked by review of `src/app/state/persistConfigs.ts`.
 
 5. **`timeout: 0` in every persist config**, so an empty store cannot request the network before `REHYDRATE`. With the default 5-second timeout, redux-persist could release the gate with empty state, the list would be fetched again and Faker would produce new image URLs. Checked by review.
-6. **`version: 1` and a validated `migrate`** in every persist config. `createValidatedMigrate(schema)` runs `createMigrate({})`, then `schema.safeParse` on the result.
+6. **A version and a validated `migrate`** in every persist config: `posts` is version 2, `favorites` is version 1. `createValidatedMigrate(migrations, schema)` runs `createMigrate(migrations)`, then `schema.safeParse` on the result.
 
    - Valid data is restored as stored.
-   - Invalid data is dropped: `migrate` resolves `undefined`, the slice starts from its initial state, and the next write replaces the stored value. For `posts` this means one new `GET /posts` with new Faker images; this happens only for corrupted or outdated storage, never for data the current version wrote.
-   - `persistedPostsSchema` checks `ids`, `entities` and `detailsById`, and that every id in `ids` has an entity. `favoritesStateSchema` checks positive, unique ids.
+   - Migration 2 of `posts` adds `isListLoaded`, `true` when the stored `ids` are not empty, so lists stored by version 1 stay and are not requested again.
+   - Invalid data is dropped: `migrate` resolves `undefined`, the slice starts from its initial state, and the next write replaces the stored value. For `posts` this means one new `GET /posts` with new Faker images; this happens only for corrupted storage, never for data that a current or earlier version wrote.
+   - `persistedPostsSchema` checks `ids`, `entities`, `detailsById` and `isListLoaded`, and that every id in `ids` has an entity. `favoritesStateSchema` checks positive, unique ids.
    - A change to a persisted shape bumps the version, adds a migration and updates the schema in the same change.
 
    Checked by review and the manual corrupted-storage check in `workflow.md`.
@@ -66,17 +67,26 @@ export const StoreProvider = ({ children }: StoreProviderProps) => {
 ```
 
 ```ts
-const createValidatedMigrate =
-  (schema: z.ZodType): PersistMigrate =>
-  async (persistedState, currentVersion) => {
+const createValidatedMigrate = (
+  migrations: MigrationManifest,
+  schema: z.ZodType,
+): PersistMigrate => {
+  const migrateVersions = createMigrate(migrations);
+  return async (persistedState, currentVersion) => {
     const migratedState = await migrateVersions(persistedState, currentVersion);
     return schema.safeParse(migratedState).success ? migratedState : undefined;
   };
+};
 
 export const createPostsPersistConfig = (
   storage: Storage,
 ): PersistConfig<PostsState> => ({
-  ...createBaseConfig('posts', storage, persistedPostsSchema),
+  ...createBaseConfig(storage, {
+    key: 'posts',
+    version: POSTS_PERSIST_VERSION,
+    migrations: POSTS_MIGRATIONS,
+    schema: persistedPostsSchema,
+  }),
   whitelist: [...POSTS_PERSIST_KEYS],
 });
 ```

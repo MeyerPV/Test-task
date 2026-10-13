@@ -5,6 +5,7 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
+    "run": "node scripts/run-app.mjs",
     "start": "react-native start",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --max-warnings=0",

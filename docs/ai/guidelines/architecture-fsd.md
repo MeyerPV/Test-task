@@ -32,16 +32,16 @@ src/
     index.tsx                      App: imports global.css, SafeAreaProvider, StatusBar, StoreProvider, RootNavigator
     state/
       createPersistedStore.ts      MMKV storage, persistReducer per slice, configureStore, persistStore
-      persistConfigs.ts            posts and favorites configs: version 1, timeout 0, migrate validated by the slice schema, posts whitelist
+      persistConfigs.ts            posts version 2 with the isListLoaded migration, favorites version 1, timeout 0, migrate validated by the slice schema, posts whitelist
       StoreProvider.tsx            creates store and persistor once through useState, Provider and PersistGate
       types.ts                     declare global RootState and AppDispatch from the store factory type
       index.ts
     navigation/
-      RootNavigator.tsx            NavigationContainer with the token theme, native stack Posts and PostDetails
+      RootNavigator.tsx            NavigationContainer with the token theme, native stack Posts and DetailsScreen
       index.ts
   pages/
     posts/
-      ui/PostsScreen.tsx           renders PostsList and navigates to PostDetails by id
+      ui/PostsScreen.tsx           renders PostsList and navigates to DetailsScreen by id
       index.ts
     post-details/
       model/usePostDetails.ts      dispatches fetchPostDetails, exposes details, request state and retry
@@ -50,8 +50,8 @@ src/
   widgets/
     posts-list/
       model/selectPostListItems.ts favorites by ascending id first, then the rest in API order, as { post, isFavorite }
-      model/usePostsList.ts        dispatches fetchPosts, exposes items, request state and retry
-      ui/PostsList.tsx             FlatList, Loader, ErrorState with Retry, EmptyState, "In favorites" badge
+      model/usePostsList.ts        dispatches fetchPosts, exposes items, isListLoaded, request state and retry
+      ui/PostsList.tsx             FlatList, Loader, ErrorState with Retry, EmptyState for a loaded empty list, "In favorites" badge
       index.ts
   features/
     toggle-favorite/
@@ -65,13 +65,13 @@ src/
       api/postDto.ts               postDtoSchema, postDtoListSchema, createPostByIdDtoSchema, PostDto
       api/postApi.ts               getPosts, getPostById through @shared/api with the DTO schemas
       lib/mapPost.ts               mapPost adds thumbnailUrl, mapPostDetails adds imageUrl
-      model/schemas.ts             postIdSchema, postSchema, postDetailsSchema, persistedPostsSchema
+      model/schemas.ts             postIdSchema, postSchema, postDetailsSchema, persistedPostsSchema with isListLoaded
       model/types.ts               Post and PostDetails from the schemas, PostsState, RequestState
       model/postsAdapter.ts        createEntityAdapter<Post>
       model/requestState.ts        idle, loading and succeeded constants, isRequestInFlight
-      model/postsSlice.ts          list, detailsById, request states, POSTS_PERSIST_KEYS from persistedPostsSchema
+      model/postsSlice.ts          list, detailsById, isListLoaded, request states, POSTS_PERSIST_KEYS from persistedPostsSchema
       model/thunks.ts              fetchPosts, fetchPostDetails with condition and rejectWithValue
-      model/selectors.ts           selectAllPosts, selectPostById, selectPostsRequest, selectPostDetails, selectPostDetailsRequest
+      model/selectors.ts           selectAllPosts, selectPostById, selectPostsRequest, selectIsPostListLoaded, selectPostDetails, selectPostDetailsRequest
       ui/PostCard.tsx              memo card: one button with thumbnail, title, body; highlight and badge from props
       ui/PostDetailsView.tsx       300x300 image capped by the screen width, header title, body
       index.ts

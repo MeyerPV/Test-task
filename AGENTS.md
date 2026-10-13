@@ -12,17 +12,17 @@ Single source of truth for AI agents working in this repository: Cursor, Claude 
 
 FirebirdPosts is a React Native test task: a list of posts, a details screen and favorites.
 
-| ID    | Requirement                                                                                                       |
-| ----- | ----------------------------------------------------------------------------------------------------------------- |
-| F1    | Posts screen lists `GET https://jsonplaceholder.typicode.com/posts`, each post enriched with a 32x32 Faker image  |
-| F2    | Details screen shows `GET /posts/{id}`, enriched with a 300x300 Faker image                                       |
-| F3    | A toggle button on the details screen adds the post to favorites; the second press removes it                     |
-| F4    | Favorite posts are visually highlighted and placed at the top of the list, ordered by ascending `id`              |
-| F5    | The list is requested once and never refreshed; every Faker image is generated once                               |
-| F6    | After a restart, data is restored without network requests and favorites are marked on the first frame            |
-| T1–T5 | React Native CLI without Expo, TypeScript, Redux Toolkit, free design, separated UI, logic and state              |
-| T6    | GitHub repository with README; `npm install` installs everything, `npm run ios` or `npm run android` runs the app |
-| A1–A2 | Built with AI agents only; chat exports in `docs/ai/chats/`, prompts in `docs/ai/prompts.md`, rules in this repo  |
+| ID    | Requirement                                                                                                      |
+| ----- | ---------------------------------------------------------------------------------------------------------------- |
+| F1    | Posts screen lists `GET https://jsonplaceholder.typicode.com/posts`, each post enriched with a 32x32 Faker image |
+| F2    | Details screen shows `GET /posts/{id}`, enriched with a 300x300 Faker image                                      |
+| F3    | A toggle button on the details screen adds the post to favorites; the second press removes it                    |
+| F4    | Favorite posts are visually highlighted and placed at the top of the list, ordered by ascending `id`             |
+| F5    | The list is requested once and never refreshed; every Faker image is generated once                              |
+| F6    | After a restart, data is restored without network requests and favorites are marked on the first frame           |
+| T1–T5 | React Native CLI without Expo, TypeScript, Redux Toolkit, free design, separated UI, logic and state             |
+| T6    | GitHub repository with README; `npm install` installs everything, `npm run` runs the app                         |
+| A1–A2 | Built with AI agents only; chat exports in `docs/ai/chats/`, prompts in `docs/ai/prompts.md`, rules in this repo |
 
 Status: stages 1 and 2 are done: the React Native template lives in the root, Jest is removed, quality gates are in place (compiler flags, aliases, ESLint, Steiger, `verify`, husky with lint-staged, pods in `postinstall`), and NativeWind 4 on theme tokens is the only styling method. The code of stages 3 and 4 is written: `shared`, `entities/post`, `features/toggle-favorite`, `widgets/posts-list`, both pages and `app`; F1–F6 are checked by hand on iOS and Android. The automated checks of stages 3 and 4 are enabled, see the table below. Stage 6 has started: the code is on GitHub at `https://github.com/MeyerPV/Test-task`, and `README.md` describes the project, setup, troubleshooting and the manual check of F1–F6. Remaining: stage 5 edge cases by hand, then chat exports with screenshots and a fresh-clone check.
 
@@ -46,6 +46,7 @@ Out of scope: automated tests, i18n (UI copy is English), dark mode, pull-to-ref
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `npm install`                     | Installs dependencies; `prepare` installs the husky hooks; `postinstall` runs `scripts/install-pods.mjs`: on macOS `bundle install` and `bundle exec pod install`, or a global `pod install` when Bundler is unavailable; skipped on CI and other OSes |
 | `npm run pods`                    | Reinstalls pods with the same script, also on CI                                                                                                                                                                                                       |
+| `npm run`                         | `scripts/run-app.mjs`: `npm run ios` on macOS, `npm run android` elsewhere; the second command of T6                                                                                                                                                   |
 | `npm run ios` / `npm run android` | Builds and launches the app, starts Metro                                                                                                                                                                                                              |
 | `npm start`                       | Starts Metro only                                                                                                                                                                                                                                      |
 | `npm run verify`                  | `typecheck`, `lint`, `lint:fsd`, `format:check`, `check:deps`; must pass with zero warnings                                                                                                                                                            |

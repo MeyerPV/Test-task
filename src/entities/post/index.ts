@@ -2,6 +2,7 @@ export { POSTS_PERSIST_KEYS, postsReducer } from './model/postsSlice';
 export { persistedPostsSchema, postIdSchema } from './model/schemas';
 export {
   selectAllPosts,
+  selectIsPostListLoaded,
   selectPostById,
   selectPostDetails,
   selectPostDetailsRequest,

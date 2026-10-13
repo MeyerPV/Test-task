@@ -14,6 +14,7 @@ export type RequestState =
 
 export type PostsState = EntityState<Post, number> & {
   detailsById: Record<number, PostDetails>;
+  isListLoaded: boolean;
   listRequest: RequestState;
   detailsRequestById: Record<number, RequestState>;
 };

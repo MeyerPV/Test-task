@@ -6,12 +6,12 @@ alwaysApply: false
 
 # Navigation
 
-- `createNativeStackNavigator<RootStackParamList>()` with the dynamic API; screens `Posts` and `PostDetails`.
+- `createNativeStackNavigator<RootStackParamList>()` with the dynamic API; screens `Posts` and `DetailsScreen`.
 - `RootStackParamList` lives in `src/shared/config/routes.ts`, which also augments `ReactNavigation.RootParamList` inside `declare global`.
-- Params carry ids only: `PostDetails: { postId: number }`.
+- Params carry ids only: `DetailsScreen: { postId: number }`.
 - Only `src/app/navigation` and `src/pages` use React Navigation. Widgets, features and entities get callbacks such as `onPostPress(postId)`.
-- Pages are typed with `NativeStackScreenProps<RootStackParamList, 'PostDetails'>`; route names are checked keys of the param list.
-- Native headers titled "Posts" and "Post"; theme, `headerTintColor` and `headerTitleStyle` from tokens.
+- Pages are typed with `NativeStackScreenProps<RootStackParamList, 'DetailsScreen'>`; route names are checked keys of the param list.
+- Native headers titled "PostsScreen" and "DetailsScreen"; theme, `headerTintColor` and `headerTitleStyle` from tokens.
 - `NavigationContainer` lives in `RootNavigator`; no state persistence, no deep links.
 
 Checks:

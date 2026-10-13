@@ -19,9 +19,8 @@ export const fetchPosts = createAppAsyncThunk<Post[], void>(
   },
   {
     condition: (_, { getState }) => {
-      const { ids, listRequest } = getState().posts;
-      const hasPosts = ids.length > 0 || listRequest.status === 'succeeded';
-      return !hasPosts && !isRequestInFlight(listRequest);
+      const { isListLoaded, listRequest } = getState().posts;
+      return !isListLoaded && !isRequestInFlight(listRequest);
     },
   },
 );

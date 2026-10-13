@@ -32,6 +32,7 @@ const toRejectedRequest = ({
 
 const initialState: PostsState = postsAdapter.getInitialState({
   detailsById: {},
+  isListLoaded: false,
   listRequest: IDLE_REQUEST,
   detailsRequestById: {},
 });
@@ -49,6 +50,7 @@ const postsSlice = createSlice({
         if (state.ids.length === 0) {
           postsAdapter.setAll(state, payload);
         }
+        state.isListLoaded = true;
         state.listRequest = SUCCEEDED_REQUEST;
       })
       .addCase(fetchPosts.rejected, (state, action) => {

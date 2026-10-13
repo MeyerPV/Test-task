@@ -1,42 +1,87 @@
 import { createMigrate } from 'redux-persist';
-import type { PersistConfig, PersistMigrate, Storage } from 'redux-persist';
-import type { z } from 'zod';
-import { persistedPostsSchema, POSTS_PERSIST_KEYS } from '@entities/post';
+import type {
+  MigrationManifest,
+  PersistConfig,
+  PersistMigrate,
+  Storage,
+} from 'redux-persist';
+import { z } from 'zod';
+import {
+  persistedPostsSchema,
+  postIdSchema,
+  POSTS_PERSIST_KEYS,
+} from '@entities/post';
 import type { PostsState } from '@entities/post';
 import { favoritesStateSchema } from '@features/toggle-favorite';
 import type { FavoritesState } from '@features/toggle-favorite';
 
-const PERSIST_VERSION = 1;
+const POSTS_PERSIST_VERSION = 2;
 
-const migrateVersions = createMigrate({});
+const FAVORITES_PERSIST_VERSION = 1;
 
-const createValidatedMigrate =
-  (schema: z.ZodType): PersistMigrate =>
-  async (persistedState, currentVersion) => {
+const storedPostIdsSchema = z.object({ ids: z.array(postIdSchema) });
+
+const POSTS_MIGRATIONS: MigrationManifest = {
+  2: state => {
+    const storedPosts = storedPostIdsSchema.safeParse(state);
+    if (state === undefined || !storedPosts.success) {
+      return state;
+    }
+    const migratedState = {
+      ...state,
+      isListLoaded: storedPosts.data.ids.length > 0,
+    };
+    return migratedState;
+  },
+};
+
+type PersistOptions = {
+  key: string;
+  version: number;
+  migrations: MigrationManifest;
+  schema: z.ZodType;
+};
+
+const createValidatedMigrate = (
+  migrations: MigrationManifest,
+  schema: z.ZodType,
+): PersistMigrate => {
+  const migrateVersions = createMigrate(migrations);
+  return async (persistedState, currentVersion) => {
     const migratedState = await migrateVersions(persistedState, currentVersion);
     return schema.safeParse(migratedState).success ? migratedState : undefined;
   };
+};
 
 const createBaseConfig = (
-  key: string,
   storage: Storage,
-  schema: z.ZodType,
+  { key, version, migrations, schema }: PersistOptions,
 ) => ({
   key,
   storage,
-  version: PERSIST_VERSION,
+  version,
   timeout: 0,
-  migrate: createValidatedMigrate(schema),
+  migrate: createValidatedMigrate(migrations, schema),
 });
 
 export const createPostsPersistConfig = (
   storage: Storage,
 ): PersistConfig<PostsState> => ({
-  ...createBaseConfig('posts', storage, persistedPostsSchema),
+  ...createBaseConfig(storage, {
+    key: 'posts',
+    version: POSTS_PERSIST_VERSION,
+    migrations: POSTS_MIGRATIONS,
+    schema: persistedPostsSchema,
+  }),
   whitelist: [...POSTS_PERSIST_KEYS],
 });
 
 export const createFavoritesPersistConfig = (
   storage: Storage,
 ): PersistConfig<FavoritesState> =>
-  createBaseConfig('favorites', storage, favoritesStateSchema);
+  createBaseConfig(storage, {
+    key: 'favorites',
+    version: FAVORITES_PERSIST_VERSION,
+    migrations: {},
+    schema: favoritesStateSchema,
+  });

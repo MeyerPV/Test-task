@@ -27,9 +27,9 @@ Server data is requested once, validated with zod, enriched with Faker images on
 
 5. **Requested once, guarded by persisted data.**
 
-   - `fetchPosts` has a `condition` that skips when `ids` is not empty, the list request has succeeded, or it is `loading`.
+   - `fetchPosts.fulfilled` sets the persisted flag `isListLoaded`, also for an empty list. The `condition` of `fetchPosts` skips when the flag is set or the request is `loading`.
    - `fetchPostDetails(postId)` skips when `detailsById[postId]` exists or its request is `loading`.
-   - `ids` and `detailsById` are persisted, so after a restart the conditions skip and nothing is requested. The loading check also absorbs a repeated mount effect.
+   - `isListLoaded` and `detailsById` are persisted, so after a restart the conditions skip and nothing is requested, even when the server returned no posts. The loading check also absorbs a repeated mount effect.
 
    Checked by review and the manual network check.
 
@@ -90,9 +90,8 @@ export const fetchPosts = createAppAsyncThunk<Post[], void>(
   },
   {
     condition: (_, { getState }) => {
-      const { ids, listRequest } = getState().posts;
-      const hasPosts = ids.length > 0 || listRequest.status === 'succeeded';
-      return !hasPosts && !isRequestInFlight(listRequest);
+      const { isListLoaded, listRequest } = getState().posts;
+      return !isListLoaded && !isRequestInFlight(listRequest);
     },
   },
 );

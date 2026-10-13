@@ -1,6 +1,6 @@
 export type RootStackParamList = {
   Posts: undefined;
-  PostDetails: { postId: number };
+  DetailsScreen: { postId: number };
 };
 
 declare global {

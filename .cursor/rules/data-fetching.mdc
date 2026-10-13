@@ -12,7 +12,7 @@ alwaysApply: false
 - Response schemas live in the `api` segment: `postDtoSchema`, `postDtoListSchema`, `createPostByIdDtoSchema(postId)` (rejects a mismatched `id`). `PostDto` is `z.infer<typeof postDtoSchema>`; no casts, no hand-written guards.
 - `import { z } from 'zod'` only in `src/shared/api`, `api` and `model` segments, `src/app/state`; no `zod/*` entries, no `z.url()` (the React Native `URL` polyfill lacks `hostname`), image URLs use `z.string().startsWith('https://')`.
 - Thunks on `createAppAsyncThunk` use `condition`, so each request runs once:
-  - `fetchPosts` skips when persisted `ids` exist, the request succeeded, or it is `loading`;
+  - `fetchPosts` skips when the persisted flag `isListLoaded` is set, even for an empty list, or the request is `loading`;
   - `fetchPostDetails` skips when `detailsById[postId]` exists or its request is `loading`.
 - `fulfilled` reducers never overwrite existing data.
 - Faker images are created once inside the thunk: `mapPost(dto, createImageUrl(imageSize.thumbnail))`, `mapPostDetails(dto, createImageUrl(imageSize.details))`. Mappers are pure; never generate images in reducers, selectors or components.

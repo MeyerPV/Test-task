@@ -10,13 +10,13 @@ alwaysApply: false
 - Two slices:
   - `posts` in `entities/post/model/postsSlice.ts`;
   - `favorites` (`ids: number[]`) in `features/toggle-favorite/model/favoritesSlice.ts`.
-- `posts` state: adapter `ids` and `entities`, `detailsById`, `listRequest`, `detailsRequestById`; `RequestState` is `idle`, `loading`, `succeeded`, `failed` with `error`.
+- `posts` state: adapter `ids` and `entities`, `detailsById`, `isListLoaded`, `listRequest`, `detailsRequestById`; `RequestState` is `idle`, `loading`, `succeeded`, `failed` with `error`.
 - `Post`, `PostDetails` and `FavoritesState` are `z.infer` of the schemas in the `model/schemas.ts` files.
 - One `persistReducer` per slice:
-  - posts: whitelist `POSTS_PERSIST_KEYS` = `persistedPostsSchema.keyof().options` = `ids`, `entities`, `detailsById`;
+  - posts: whitelist `POSTS_PERSIST_KEYS` = `persistedPostsSchema.keyof().options` = `ids`, `entities`, `detailsById`, `isListLoaded`;
   - favorites: the whole slice.
 - Request states are never persisted.
-- Every persist config has `timeout: 0`, so an empty store cannot request the network before `REHYDRATE`, plus `version: 1` and `createValidatedMigrate(schema)`: `createMigrate({})`, then `schema.safeParse`; invalid storage resolves `undefined` and the slice starts empty.
+- Every persist config has `timeout: 0`, so an empty store cannot request the network before `REHYDRATE`, plus a version (`posts` 2, `favorites` 1) and `createValidatedMigrate(migrations, schema)`: `createMigrate(migrations)`, then `schema.safeParse`; invalid storage resolves `undefined` and the slice starts empty. Migration 2 of `posts` adds `isListLoaded` from the stored `ids`.
 - A persisted shape change bumps the version, adds a migration and updates the schema together.
 - The store is created inside `StoreProvider` through `useState(createPersistedStore)`, never at module level.
 - `PersistGate` with `Loader` wraps everything that reads data or dispatches thunks.

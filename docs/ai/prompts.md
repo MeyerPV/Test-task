@@ -23,7 +23,7 @@ This log is a historical record, not a source of rules. Later prompts override e
 - Date: 2026-10-11
 - Stage: pre-stage, analysis
 - Tool and model: Cursor Agent / Claude Opus 5.5
-- Chat export: pending, see `docs/ai/chats/README.md`
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
 - Outcome: requirement checklist F1–F6, T1–T6, A1–A2; interpretations of the ambiguities; read-only environment audit (Node 22.23.3, Xcode 26.2, CocoaPods 1.16.2, Ruby 4.0.1, JDK 17, Android SDK 36, NDK 27.1); gaps: Android cmdline-tools, `JAVA_HOME`, `gh` authentication, port 8081 busy.
 
 ```text
@@ -45,7 +45,7 @@ This log is a historical record, not a source of rules. Later prompts override e
 - Date: 2026-10-11
 - Stage: pre-stage, planning
 - Tool and model: Cursor Agent, Plan mode / Claude Opus 5.5
-- Chat export: pending
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
 - Outcome: plan with the FSD tree, data flow, library compatibility for React Native 0.87.1, quality gates, stages and risks. Decisions from the follow-up questions: Redux Toolkit with redux-persist, MMKV storage, favorites ordered by ascending id.
 - Superseded by P-03: plan item 4 and its lint plugin were dropped; the `app` segments and the location of the favorites slice were corrected.
 
@@ -92,7 +92,7 @@ This log is a historical record, not a source of rules. Later prompts override e
 - Date: 2026-10-11
 - Stage: pre-stage, agent infrastructure
 - Tool and model: Cursor Agent / Claude Opus 5.5
-- Chat export: pending
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
 - Outcome: `AGENTS.md`, `CLAUDE.md`, eleven guides in `docs/ai/guidelines/`, Cursor rules in `.cursor/rules/`, this log and `docs/ai/chats/`. Plan corrections recorded in the guides: no assistive-technology scope, `app/state` and `app/navigation` segments, favorites only in `features/toggle-favorite`, `fsd/insignificant-slice` off as a conscious exception, `fetch` with `unknown` and type guards, data-only whitelist with `timeout: 0`, store created inside the provider.
 
 ```text
@@ -121,7 +121,7 @@ This log is a historical record, not a source of rules. Later prompts override e
 - Date: 2026-10-11
 - Stage: pre-stage, agent infrastructure
 - Tool and model: Cursor Agent / Claude Opus 5.5
-- Chat export: pending
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
 - Outcome: agent files moved from `FirebirdPosts/` to the repository root `Firebird-test/`, nested folder removed. Docs updated: the repository root is the workspace root, the task PDF is ignored by `*.pdf`, stage 1 copies the CLI output into the root without the temporary `.git`.
 
 ```text
@@ -143,7 +143,7 @@ Initialization was done within P-05: the prompt assumed the template was already
 - Date: 2026-10-11
 - Stage: 1 and 2
 - Tool and model: Cursor Agent / Claude Opus 5.5
-- Chat export: pending, see `docs/ai/chats/README.md`
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
 - Clarification: the root held no React Native project. Asked how to proceed; answer: initialize RN 0.87.1 through a temporary directory per the stage 1 note in `workflow.md`, no nested folder.
 - Outcome:
   - Template initialized with CLI 20.2.0 and copied into the root; `git init`; `package.json` name fixed to `firebird-posts`.
@@ -182,7 +182,7 @@ P-06 to P-10 arrived in one message. Its first line applies to all five and is k
 - Date: 2026-10-11
 - Stage: 2
 - Tool and model: Cursor Agent / Claude Opus 5.5
-- Chat export: pending, see `docs/ai/chats/README.md`
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
 - Outcome:
   - Peers checked, then installed: `nativewind` 4.2.7 (`react-native-css-interop` 0.2.7 needs `tailwindcss ~3` and `react-native-reanimated >= 3.6.2`), `tailwindcss` 3.4.19, `react-native-reanimated` 4.7.1 (peer `react-native 0.86 - 0.88`), `react-native-worklets` 0.13.0, `clsx` 2.1.1, `eslint-plugin-tailwindcss` 3.18.3.
   - `babel.config.js` with `nativewind/babel` and `module-resolver`. `metro.config.js` with `withNativeWind(config, { input: './global.css', disableTypeScriptGeneration: true })`. `global.css` imported in `src/app/index.tsx`, and `global.d.css.ts` declares it because TypeScript 6 checks side-effect imports.
@@ -213,7 +213,7 @@ P-06 to P-10 arrived in one message. Its first line applies to all five and is k
 - Date: 2026-10-12
 - Stage: 2
 - Tool and model: Cursor Agent / Claude Opus 5.5
-- Chat export: pending, see `docs/ai/chats/README.md`
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
 - Outcome:
   - The code was correct: `npm run typecheck` on TypeScript 6.0.3 passes, and `StatusBarProps` of React Native 0.87 has `barStyle`.
   - The editor used TypeScript 5.3.0-dev from the 2023 "JavaScript and TypeScript Nightly" extension (`ms-vscode.vscode-typescript-next`). Its `tsc` reproduced the error and also rejected `es2024.promise` in `@react-native/typescript-config`.
@@ -241,7 +241,7 @@ Fix it, verify, and then give a concise explanation. index.tsx (8-11)
 - Date: 2026-10-11
 - Stage: 3 and 4
 - Tool and model: Cursor Agent / Claude Opus 5.5
-- Chat export: pending, see `docs/ai/chats/README.md`
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
 - Outcome:
   - `theme/tokens.ts`: the requested groups plus `imageSize` and the `on-accent` color.
   - `config`: `API_BASE_URL`, plus `RootStackParamList` with the global `ReactNavigation.RootParamList` augmentation.
@@ -278,7 +278,7 @@ Fix it, verify, and then give a concise explanation. index.tsx (8-11)
 - Date: 2026-10-11
 - Stage: 3
 - Tool and model: Cursor Agent / Claude Opus 5.5
-- Chat export: pending, see `docs/ai/chats/README.md`
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
 - Outcome:
   - `api`: `PostDto`, `isPostDto`, `parsePostDto` and `parsePostDtoList`, with no casts; `postApi.getPosts(signal)` and `getPostById(id, signal)`.
   - `model`: `Post`, `PostDetails`, and the `RequestState` union.
@@ -310,7 +310,7 @@ Fix it, verify, and then give a concise explanation. index.tsx (8-11)
 - Date: 2026-10-11
 - Stage: 3 and 4
 - Tool and model: Cursor Agent / Claude Opus 5.5
-- Chat export: pending, see `docs/ai/chats/README.md`
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
 - Outcome:
   - `favoritesSlice` with `ids: number[]` and `favoriteToggled(postId)`; `selectFavoriteIds` and `selectIsFavorite`.
   - `FavoriteToggleButton` is built on `Button` and `StarIcon`, with a typed appearance map: outline "Add to favorites", primary "Remove from favorites".
@@ -334,7 +334,7 @@ Fix it, verify, and then give a concise explanation. index.tsx (8-11)
 - Date: 2026-10-11
 - Stage: 3
 - Tool and model: Cursor Agent / Claude Opus 5.5
-- Chat export: pending, see `docs/ai/chats/README.md`
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
 - Clarification: Metro could not transform the `export * as` syntax of zod, and the iOS dev RedBox crashed on that error. The agent asked how to fix it with `AskQuestion`; the selected option is the second block below, verbatim.
 - Outcome:
   - `zod` 4.6.5 installed; 4.6.6 was a few hours old and was skipped. No dependencies and no peers.
@@ -369,7 +369,7 @@ Fix it, verify, and then give a concise explanation. index.tsx (8-11)
 - Date: 2026-10-11
 - Stage: 4
 - Tool and model: Cursor Agent / Claude Opus 5.5
-- Chat export: pending, see `docs/ai/chats/README.md`
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
 - Outcome:
   - `widgets/posts-list`:
     - `selectPostListItems` returns `{ post, isFavorite }` items;
@@ -410,7 +410,7 @@ Fix it, verify, and then give a concise explanation. index.tsx (8-11)
 - Date: 2026-10-11
 - Stage: 3 and 4
 - Tool and model: Cursor Agent / Claude Opus 5.5
-- Chat export: pending, see `docs/ai/chats/README.md`
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
 - Clarification: after "продолжай" finished the recheck of P-06 to P-10, the agent asked two questions with `AskQuestion`: what to do with the `ImageBackground` deprecation warning of the template screen, and what to do next. The block below holds the two selected options verbatim.
 - Outcome:
   - `eslint-plugin-local-rules` 3.0.2 installed after checking that it has no dependencies and no peers; `typescript-eslint` 8.71.1 supports TypeScript below 6.1, so typed linting runs on TypeScript 6.0.3.
@@ -443,7 +443,7 @@ No entries yet.
 - Date: 2026-10-12
 - Stage: 6
 - Tool and model: Cursor Agent / Claude Opus 5.5
-- Chat export: pending, see `docs/ai/chats/README.md`
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
 - Outcome:
   - `.gitignore` gains `*.log` and `.env*`; `git.md` rule 7 requires them and the template lacked them.
   - The first `pre-commit` run failed: lint-staged passed `.prettierrc.js` to ESLint 8, which ignores dotfiles by default, and the "File ignored by default" warning broke `--max-warnings=0`. `ignorePatterns` in `.eslintrc.js` now re-includes `!.prettierrc.js`, and the `workflow.md` tool notes explain why.
@@ -470,7 +470,7 @@ git push -u origin main
 - Date: 2026-10-12
 - Stage: 6
 - Tool and model: Cursor Agent / Claude Opus 5.5
-- Chat export: pending, see `docs/ai/chats/README.md`
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
 - Outcome:
   - The prompt refers to the local review `docs/review.md`. Its item 1 is the README, item 2 is the GitHub push done in P-14, item 4 is the Gradle timeout.
   - `README.md` replaces the CLI template with a Russian description of the project. It covers the F1–F6 table with the code behind each requirement, the stack, environment requirements, `npm install` and `npm run ios` or `npm run android`, troubleshooting (`npm run pods` after a broken `pod install`, the Gradle download, `JAVA_HOME`, a busy port 8081, `--reset-cache`), a manual check of F1–F6 in the DevTools Network panel, scripts and hooks, the FSD layers, accessibility and links to the AI artifacts.
@@ -480,4 +480,115 @@ git push -u origin main
 
 ```text
 @docs/review.md сделай пункты 1 и 4, пункт 2 сделан
+```
+
+### P-16. One install command, one run command
+
+- Date: 2026-10-12
+- Stage: 6
+- Tool and model: Cursor Agent / Claude Opus 5.5
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
+- Outcome:
+  - `npm run` through `scripts/run-app.mjs` starts the iOS app on macOS and the Android app on every other OS, so the reviewer installs with `npm install` and launches with `npm run` (T6). `npm run ios` and `npm run android` stay for a chosen platform.
+  - `README.md`, the T6 row and the commands table in `AGENTS.md`, and the stage 6 row in `workflow.md` name `npm run`.
+  - Requirements: T6, A2.
+
+```text
+@package.json:1-71 добавь сюда скрипт, чтобы выполнялось требование
+
+Код должен быть выложен в GitHub (репозиторий с README и инструкцией
+по запуску). Проверяющий должен установить проект одной командой,
+второй - запустить
+```
+
+### P-17. Debug: list thumbnails did not load
+
+- Date: 2026-10-12
+- Stage: 6
+- Tool and model: Cursor Agent (Debug mode) / Claude Opus 5.5
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
+- Outcome:
+  - The app on the iPhone 17 Pro simulator ran another project's JavaScript. It had no `RCT_jsLocation`, so it loaded from Metro on 8081, which served `/Users/pavelsuperapp/Documents/FirebirdTest`, a separate implementation with the same bundle id `com.firebird.posts`. The Metro inspector showed its modules, such as `src/shared/ui/RemoteImage.tsx`, and none of ours.
+  - With `RCT_jsLocation=localhost:8082` the app loaded this project's bundle. Temporary `onLoadStart`, `onLoad` and `onError` logs in `RemoteImage` recorded 67 starts, 67 loads and no errors, and the first thumbnails were valid `https://picsum.photos/seed/<seed>/32/32` URLs.
+  - No code change: the cause is the documented busy-port pitfall in `README.md` and `workflow.md`. The instrumentation was removed in P-18.
+  - Requirements: F1.
+
+```text
+картинки для первых элементов списка @src/widgets/posts-list/ui/PostsList.tsx:1-73 не подгрузились
+```
+
+### P-18. Remove debug logs, rename the details route
+
+- Date: 2026-10-12
+- Stage: 6
+- Tool and model: Cursor Agent / Claude Opus 5.5
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
+- Outcome:
+  - The P-17 instrumentation in `RemoteImage.tsx` and `PostsList.tsx` is removed; both files match the last commit.
+  - The route `PostDetails` is now `DetailsScreen` in `RootStackParamList`, `RootNavigator`, the `navigate` call in `PostsScreen` and the screen props of `DetailsScreen`. The data type `PostDetails` in `entities/post` keeps its name: it describes a post with its image, not a screen.
+  - `navigation.md`, `navigation.mdc` and the map in `architecture-fsd.md` use the new route name.
+  - Requirements: F2, T5.
+
+```text
+удали дебаг логи
+
+и переименуй PostDetails в DetailsScreen во всех местах
+```
+
+### P-19. Recheck F5 and F6, persisted list flag
+
+- Date: 2026-10-12
+- Stage: 6
+- Tool and model: Cursor Agent / Claude Opus 5.5
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
+- Outcome:
+  - Rechecked on the iPhone 17 Pro simulator through the Metro inspector, starting from empty storage:
+    - the first launch sends one `GET /posts`; the first open of a post sends one `GET /posts/{id}`, and a second open sends nothing;
+    - after a JS reload and after a cold restart nothing is requested, `listRequest` stays `idle`, thumbnail and details URLs are identical, and favorites 3 and 7 lead the list.
+  - Gap found: an empty `GET /posts` response would be requested again after every restart, because the guard was the persisted `ids`. `AGENTS.md` rule 6 already asked for a persisted flag.
+  - Fix:
+    - `posts` gains the persisted `isListLoaded`, set by `fetchPosts.fulfilled` also for an empty list; the `fetchPosts` condition checks the flag.
+    - `persistedPostsSchema` requires the flag. The posts persist config moves to version 2, and migration 2 sets the flag from the stored `ids`.
+    - `PostsList` shows `EmptyState` "No posts" for a loaded empty list, through `selectIsPostListLoaded`.
+  - Checked at runtime:
+    - version 1 storage migrates without a request and keeps URLs and favorites;
+    - a stored empty loaded list shows "No posts" and sends nothing after a reload and a cold restart;
+    - a fresh launch sends one request, and the next reload none;
+    - a corrupted thumbnail leads to one new request, and the next reload none.
+  - The user's header titles "PostsScreen" and "DetailsScreen" stay. `RootNavigator.tsx` is formatted with Prettier, and `navigation.md`, `navigation.mdc` and the README name them.
+  - Docs: `data-fetching.md`, `state-management.md`, `architecture-fsd.md`, the data-fetching and state-management Cursor rules, the F1, F2 and F5 rows of the README.
+  - Requirements: F5, F6.
+
+```text
+@src/widgets/posts-list/model/usePostsList.ts:1-29 перепроверь пункты
+
+5. Сгенерированный список запрашивается только 1 раз и никогда не
+обновляется. Добавленные картинки из FakerJS также добавляются только 1
+раз - и для PostsScreen, и для DetailsScreen
+6. При повторном открытии приложения данные сохраняются и повторно не
+запрашиваются. Все посты, добавленные в избранное - отмечены сразу
+```
+
+```text
+Добавить сохраняемый флаг загрузки списка: даже пустой список больше не запрашивается повторно; текст EmptyState поправить, AGENTS.md остаётся как есть (Recommended)
+
+Оставить новые заголовки: отформатировать Prettier и обновить navigation.md и правило Cursor
+```
+
+### P-20. Full chat export
+
+- Date: 2026-10-12
+- Stage: 6
+- Tool and model: Cursor Agent / Claude Opus 5.5
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`
+- Outcome:
+  - The whole session, from the task analysis on 2026-10-11 through this prompt, is exported as 22 numbered turns. Each turn keeps the question and every text fragment of the answer, including the English working notes stored in the same message.
+  - Tool calls are not in the export: the transcript stores them separately from the answer text. One system tool-catalog refresh is marked in place and its body is left out.
+  - Every earlier entry in this log points at the same file.
+  - Requirements: A1.
+
+```text
+сделай мне полную выгрузку этого чата с моими вопросами и твоими ответами в md формате, сохраняя форматирование, чтобы удобно было читать. Мне нужна полная выгрузка абсолютно все моменты
+
+создай md в этом проекте
 ```

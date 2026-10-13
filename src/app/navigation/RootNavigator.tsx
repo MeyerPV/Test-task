@@ -25,9 +25,11 @@ const SCREEN_OPTIONS: NativeStackNavigationOptions = {
   headerTitleStyle: { color: colors.ink },
 };
 
-const POSTS_OPTIONS: NativeStackNavigationOptions = { title: 'Posts' };
+const POSTS_OPTIONS: NativeStackNavigationOptions = { title: 'PostsScreen' };
 
-const DETAILS_OPTIONS: NativeStackNavigationOptions = { title: 'Post' };
+const DETAILS_OPTIONS: NativeStackNavigationOptions = {
+  title: 'DetailsScreen',
+};
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -40,7 +42,7 @@ export const RootNavigator = () => (
         options={POSTS_OPTIONS}
       />
       <Stack.Screen
-        name="PostDetails"
+        name="DetailsScreen"
         component={DetailsScreen}
         options={DETAILS_OPTIONS}
       />

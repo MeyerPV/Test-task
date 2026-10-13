@@ -46,7 +46,7 @@ npx eslint . --fix --rule "no-restricted-imports: off"
 | 3     | Data layer: `shared/api`, `shared/lib`, `entities/post`, `features/toggle-favorite` model, `app/state`        | Stage 3 checks enabled and green; one `GET /posts` on first launch, zero after restart |
 | 4     | UI: `shared/ui`, widgets, `FavoriteToggleButton`, pages, `app/navigation`                                     | Stage 4 checks enabled and green; F1–F4 on both platforms                              |
 | 5     | Edge cases: offline first launch, offline restart, unopened details offline                                   | F5 and F6 confirmed by hand                                                            |
-| 6     | README, A1 and A2 artifacts, fresh-clone check, GitHub push                                                   | Fresh clone passes `npm install` and `npm run ios` or `npm run android`                |
+| 6     | README, A1 and A2 artifacts, fresh-clone check, GitHub push                                                   | Fresh clone passes `npm install` and `npm run`                                         |
 
 ### Stage 1 note
 

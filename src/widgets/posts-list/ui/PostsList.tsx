@@ -17,7 +17,7 @@ type PostsListProps = {
 };
 
 export const PostsList = ({ onPostPress }: PostsListProps) => {
-  const { items, request, retry } = usePostsList();
+  const { items, isListLoaded, request, retry } = usePostsList();
   const insets = useSafeAreaInsets();
   const contentInsetStyle = useMemo(
     () => ({ paddingBottom: insets.bottom + spacing.lg }),
@@ -37,20 +37,20 @@ export const PostsList = ({ onPostPress }: PostsListProps) => {
   );
 
   if (items.length === 0) {
+    if (isListLoaded) {
+      return (
+        <EmptyState
+          title="No posts"
+          message="The server returned an empty list."
+        />
+      );
+    }
     if (request.status === 'failed') {
       return (
         <ErrorState
           title="Posts could not be loaded"
           message={request.error}
           onRetry={retry}
-        />
-      );
-    }
-    if (request.status === 'succeeded') {
-      return (
-        <EmptyState
-          title="No posts yet"
-          message="New posts will appear here once they are published."
         />
       );
     }

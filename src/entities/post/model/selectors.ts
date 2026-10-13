@@ -13,6 +13,9 @@ export const selectPostById = postsSelectors.selectById;
 export const selectPostsRequest = (state: RootState): RequestState =>
   state.posts.listRequest;
 
+export const selectIsPostListLoaded = (state: RootState): boolean =>
+  state.posts.isListLoaded;
+
 export const selectPostDetails = (
   state: RootState,
   postId: number,
