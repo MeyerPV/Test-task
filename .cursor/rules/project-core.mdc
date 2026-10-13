@@ -16,7 +16,7 @@ Immutable rules:
 4. Strict TypeScript: no `any`, no `!`, no `@ts-ignore`, no `as` except `as const`.
 5. React Native CLI only; no Expo packages; native deps support the New Architecture and are allowlisted.
 6. Global state in Redux Toolkit; server data requested once and persisted; restored slices pass a zod schema.
-7. NativeWind `className` on theme tokens; `style` only for runtime values via memoized variables; no inline objects, color literals, arbitrary values.
+7. NativeWind `className` on theme tokens; `style` only for runtime values via memoized variables; no inline style objects, color literals, arbitrary values.
 8. Named exports only.
 9. Network only through `src/shared/api`; `httpClient.get` validates every response with a zod schema.
 

@@ -34,7 +34,7 @@ A new visual value is a new token in `tokens.ts`, never a one-off class.
 ## Rules
 
 1. **`className` for static styles, with token classes only.** A class that is not built from a token does not exist and fails `tailwindcss/no-custom-classname`.
-2. **`style` only for values known at runtime**: safe-area insets, the screen width from `useWindowDimensions`, sizes passed as props. The value is a memoized variable, never an inline object or array literal.
+2. **`style` only for values known at runtime**: safe-area insets, the screen width from `useWindowDimensions`, sizes passed as props. The value is a memoized variable, never an inline object or array literal. The reason is NativeWind: on an element with a `className`, `react-native-css-interop` compares `style` and `*Style` props with `Object.is`, and a new object makes it resolve every class of that element again. `RemoteImage` needs no `style`: `Image` reads its size from `source`. The rule covers style props only; other object props follow rule 3 of `performance.md`.
 3. **Component variants are typed class maps.** A map is `Record<Variant, string>` declared with `as const satisfies`, at module level, holding complete class strings.
 4. **Conditional classes go through `clsx`.** Combine a base string, the variant from the map and `condition && 'classes'` in one `clsx` call. No interpolated class names such as `` `bg-${tone}` ``: Tailwind cannot see them.
 5. **No arbitrary values in square brackets** such as `w-[300px]`, `mt-[13px]` or `bg-[#ffffff]`.

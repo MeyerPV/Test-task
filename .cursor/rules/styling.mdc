@@ -9,7 +9,7 @@ alwaysApply: false
 - NativeWind 4.2 on Tailwind 3.4 is the only styling method. `tailwind.config.js` sets `colors`, `spacing`, `borderRadius`, `borderWidth`, `opacity`, `fontSize` from `src/shared/theme/tokens.ts` without `extend`; only `minHeight.touch` and `minWidth.touch` extend.
 - `tokens.ts` is the single source for JS too: navigation theme, `ActivityIndicator` color, `android_ripple`, image sizes, through `@shared/theme`.
 - `className` for static styles with token classes only: `bg-canvas`, `text-ink`, `p-lg`, `rounded-md`, `min-h-touch`.
-- `style` only for runtime values (safe-area insets, screen width), passed as a memoized variable; never an inline object or array.
+- `style` only for runtime values (safe-area insets, screen width), passed as a memoized variable; never an inline object or array. css-interop compares `style` by reference on an element with a `className` and resolves its classes again for a new object.
 - Variants are module-level typed class maps: `Record<Variant, string>` with `as const satisfies`.
 - Conditional classes through `clsx`; no interpolated class names.
 - No arbitrary values in square brackets, no color literals outside `tokens.ts`, no `StyleSheet`.

@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { Image } from 'react-native';
 import { clsx } from 'clsx';
 
@@ -17,15 +16,12 @@ export const RemoteImage = ({
   accessibilityLabel,
   className,
 }: RemoteImageProps) => {
-  const source = useMemo(() => ({ uri, width, height }), [uri, width, height]);
-  const sizeStyle = useMemo(() => ({ width, height }), [width, height]);
   const isDecorative = accessibilityLabel === undefined;
 
   return (
     <Image
-      source={source}
+      source={{ uri, width, height }}
       resizeMode="cover"
-      style={sizeStyle}
       className={clsx('bg-surface-pressed', className)}
       accessible={!isDecorative}
       accessibilityRole={isDecorative ? 'none' : 'image'}

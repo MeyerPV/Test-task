@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { Pressable } from 'react-native';
 import { clsx } from 'clsx';
@@ -35,30 +34,23 @@ export const Button = ({
   isSelected = false,
   isDisabled = false,
   accessibilityHint,
-}: ButtonProps) => {
-  const accessibilityState = useMemo(
-    () => ({ selected: isSelected, disabled: isDisabled }),
-    [isSelected, isDisabled],
-  );
-
-  return (
-    <Pressable
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      accessibilityHint={accessibilityHint}
-      accessibilityState={accessibilityState}
-      disabled={isDisabled}
-      onPress={onPress}
-      className={clsx(
-        'min-h-touch min-w-touch flex-row items-center justify-center gap-sm rounded-md border-strong px-lg py-sm',
-        CONTAINER_CLASS_NAMES[variant],
-        isDisabled && 'opacity-disabled',
-      )}
-    >
-      {icon}
-      <Typography variant="subtitle" tone={LABEL_TONES[variant]}>
-        {label}
-      </Typography>
-    </Pressable>
-  );
-};
+}: ButtonProps) => (
+  <Pressable
+    accessibilityRole="button"
+    accessibilityLabel={label}
+    accessibilityHint={accessibilityHint}
+    accessibilityState={{ selected: isSelected, disabled: isDisabled }}
+    disabled={isDisabled}
+    onPress={onPress}
+    className={clsx(
+      'min-h-touch min-w-touch flex-row items-center justify-center gap-sm rounded-md border-strong px-lg py-sm',
+      CONTAINER_CLASS_NAMES[variant],
+      isDisabled && 'opacity-disabled',
+    )}
+  >
+    {icon}
+    <Typography variant="subtitle" tone={LABEL_TONES[variant]}>
+      {label}
+    </Typography>
+  </Pressable>
+);

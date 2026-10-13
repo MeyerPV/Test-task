@@ -612,3 +612,78 @@ git push -u origin main
 и вот эти 2 команды вставь туда
 @package.json (9-10)
 ```
+
+### P-22. Memoization review
+
+- Date: 2026-10-13
+- Stage: 6
+- Tool and model: Cursor Agent / Claude Opus 5.5
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`, messages 23–24
+- Outcome:
+  - Every `memo`, `useMemo`, `useCallback` and `createSelector` in `src` was checked against the React Native 0.87 and NativeWind sources:
+    - React Compiler is not enabled;
+    - `FlatList`, `VirtualizedList` and its cells are `PureComponent`;
+    - `Pressable` is `memo`, but new `children` defeat it;
+    - `Image` builds new `style` and `source` arrays on every render and takes its size from `source`;
+    - Fabric compares object props with `deepDiffer`;
+    - `react-native-css-interop` compares `style` by reference on an element with a `className` and resolves its classes again for a new object.
+  - Removed, because no consumer compares the reference: `useCallback` in `PostCard` and `FavoriteToggleButton`, `useMemo` for `accessibilityState` in `Button`, both `useMemo` and the `style` prop in `RemoteImage`.
+  - Kept: `memo(PostCard)`, `handlePostPress` in `PostsScreen`, `renderItem` and `contentInsetStyle` in `PostsList`, the inset styles in `Screen` and `DetailsScreen`, the request callbacks in `usePostsList` and `usePostDetails` used by `useEffect`, and `selectPostListItems`.
+  - Docs: rule 3 and rule 5 of `performance.md` with a Don't example, rule 2 of `styling.md`, the performance, styling and project-core Cursor rules. `project-core.mdc` now says "no inline style objects", as `AGENTS.md` does.
+  - Checked at runtime after a cold restart of the installed builds, since no native code changed:
+    - Android emulator `Medium_Phone_API_36.1`, by taps: 32x32 thumbnails and the favorites on top; the details image of 300 dp; "Add to favorites" turns into "Remove from favorites", and post 3 joins the favorites after posts 1 and 2; the toggle was reverted afterwards.
+    - iPhone 17 simulator: the list with 32x32 thumbnails and favorites, and the 300 pt details image of post 1, opened through the Metro inspector. The favorite toggle on iOS was not repeated: it runs the same JavaScript as on Android.
+    - The only warning is the known "ImageBackground is deprecated" from `react-native-css-interop`.
+  - Requirements: none changed; F1–F4 rechecked.
+
+```text
+@src/entities/post/ui/PostCard.tsx:1-61 @src/shared/ui/RemoteImage/RemoteImage.tsx:1-38 а действительно ли тут нужна мемоизация?
+
+проверь вообще весь проект
+```
+
+```text
+Убрать лишние мемоизации и style в RemoteImage, записать обоснование в styling.md и performance.md, прогнать verify и iOS/Android (Recommended)
+```
+
+### P-23. Dependency audit
+
+- Date: 2026-10-13
+- Stage: 6
+- Tool and model: Cursor Agent / Claude Opus 5.5
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`, message 25
+- Outcome:
+  - `npm audit` found 31 entries, 27 high and 4 moderate, from two advisories:
+    - `braces` 3.0.3: no patched release. It reaches only build tooling and is not in the app bundle, so it is accepted and documented.
+    - `postcss-selector-parser` 6.1.4 through Tailwind 3.4: raised to 7.1.6 through `overrides`, and the Tailwind output of `global.css` is byte-identical.
+  - After the fix, 27 high entries remain, all from `braces`. `npm audit signatures` verifies every package. `npm ls` shows no invalid or extraneous packages.
+  - `zod` 4.6.5 is updated to 4.6.7 within its range. `@types/react` 19.3.0 is pinned to `~19.2.18` to match React 19.2.3.
+  - Held on purpose, as documented: React 19.3, Babel 8, ESLint 10, Prettier 3, Tailwind 4, TypeScript 7, eslint-plugin-tailwindcss 4. `react-native-screens` 4.30 is outside the `~4.29.0` range and would need a native rebuild.
+  - Checked at runtime with a separate Metro on port 8082 started with `--reset-cache`:
+    - iPhone 17: the list renders, and a cold restart shows the same thumbnails. The iOS app had been reinstalled with empty storage at 19:57, before this prompt, which explains its missing favorites.
+    - Android emulator, restarted after the install against the running Metro on port 8081: the list, the thumbnails and favorites 1 and 2 stay as before.
+    - The project schemas on zod 4.6.7 accept the persisted shapes and still reject duplicate favorite ids and `http://` URLs.
+  - `npm run verify` passes. Docs: the audit section, the `@types/react` row and the Metro `exports` warning in `react-native.md`, plus the React Native Cursor rule.
+  - Requirements: T1, T6.
+
+```text
+проведи audit зависимостей и поправь существующие проблемы, также проверь чтобы приложение запускалось после фикса и запусти линтер
+```
+
+### P-24. Append this chat to the export
+
+- Date: 2026-10-13
+- Stage: 6
+- Tool and model: Cursor Agent / Claude Opus 5.5
+- Chat export: `docs/ai/chats/2026-10-12_cursor_full-chat.md`, message 26
+- Outcome:
+  - Messages 23–26 of session `51f17cba-3fd5-4861-b30f-2592a35f5d2f` are appended to the existing export: the memoization review, the selected option, the dependency audit and this request.
+  - The file header names both sessions and the period 11–13 October 2026. Tool calls stay out; the option chosen in the interface is message 24, because the transcript has no `<user_query>` for it.
+  - P-22 points at messages 23–24 and P-23 at message 25.
+  - Requirements: A1.
+
+```text
+@docs/ai/chats/2026-10-12_cursor_full-chat.md
+
+добавь последние сообщения из нашего чата
+```

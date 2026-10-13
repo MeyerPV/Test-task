@@ -8,9 +8,10 @@ alwaysApply: false
 
 - Lists use `FlatList` with data from a memoized selector, a module-level `keyExtractor`, a `useCallback` `renderItem`, and a `memo` item that receives only stable props.
 - `selectPostListItems` (`createSelector`) returns `{ post, isFavorite }`: favorites by ascending id, then the rest in API order. `useAppSelector` callbacks never create arrays or objects.
-- Callbacks passed to memoized children are wrapped in `useCallback` with complete dependencies.
+- Memoize only for a consumer that compares references: `memo` components, `FlatList`, hook dependencies, selectors, a `style` next to a `className`. Use `useCallback` or `useMemo` with complete dependencies there.
+- Props of non-memoized components (`Card`, `Button`, `Image`) are plain functions and object literals: they re-render with the parent, new `children` defeat the `memo` of `Pressable`, and Fabric compares object props by value.
 - No sorting, filtering or mapping of store data in render.
-- Images use explicit token sizes (`imageSize.thumbnail` 32, `imageSize.details` 300 capped by the screen width); the requested size equals the rendered size.
+- Images use explicit token sizes (`imageSize.thumbnail` 32, `imageSize.details` 300 capped by the screen width); the requested size equals the rendered size. `RemoteImage` passes the size only in `source`, which `Image` uses as its dimensions.
 - Faker is imported only from `@faker-js/faker/locale/en`.
 - No `console` calls in committed code.
 - Toggling a favorite re-renders only the affected item and the order; verify with React DevTools "Highlight updates".

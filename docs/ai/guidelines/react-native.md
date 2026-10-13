@@ -97,6 +97,7 @@ export const PostRow = ({ post }: PostRowProps) => (
 | ----------------------------------------------- | ------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `react-native`                                  | 0.87.1  | yes    | New Architecture and Hermes always on; Node `^22.13 \|\| ^24.3`                                                                                                                              |
 | `react`                                         | 19.2.3  | no     | Pinned by the template; RN peer `^19.2.3`                                                                                                                                                    |
+| `@types/react`                                  | 19.2.x  | dev    | `~19.2.18` follows the React runtime line; 19.3 types describe APIs that React 19.2.3 lacks. RN peer `^19.1.1`                                                                               |
 | `@react-navigation/native`                      | 7.5.x   | no     | Peer `react >= 18.2`, `react-native *`                                                                                                                                                       |
 | `@react-navigation/native-stack`                | 7.20.x  | no     | Peer `react-native-screens >= 4`, `react-native-safe-area-context >= 4`                                                                                                                      |
 | `react-native-screens`                          | 4.29.x  | yes    | Fabric support, peer `*`                                                                                                                                                                     |
@@ -123,7 +124,20 @@ Not used, and must not be added: Expo packages, AsyncStorage, other state manage
 
 `react-native-css-interop` 0.2.7 calls `remapProps(ImageBackground)` when it loads, and React Native 0.87 prints "ImageBackground is deprecated" for that access. In development LogBox shows it as "Open debugger to view warnings" on every launch. The project does not use `ImageBackground`; the warning is not suppressed, because `LogBox.ignoreLogs` would hide it for every caller. It disappears when NativeWind stops touching the export.
 
+On a cold Metro cache, Metro also warns that the module `react-native/src/private/featureflags/ReactNativeFeatureFlags` is not listed in the `exports` of `react-native`. The import comes from `@react-native/virtualized-lists` 0.87.1, part of React Native itself; Metro falls back to file resolution, and there is nothing to fix in the project.
+
+## Dependency audit
+
+`npm audit` on 2026-10-13 reports one advisory, and it reaches only build tooling:
+
+- `braces` 3.0.3, [GHSA-vfj7-8cjw-p6xm](https://github.com/advisories/GHSA-vfj7-8cjw-p6xm), high: deeply nested brace patterns overflow the stack. No patched release exists. It comes through `micromatch`, `fast-glob` and `chokidar` in Metro, the React Native CLI, Tailwind, eslint-plugin-tailwindcss and Steiger, so `npm audit` counts 27 packages. Every pattern comes from the project's own config, and none of these modules is in the app bundle. Accepted until `braces` ships a fix.
+- `postcss-selector-parser` below 7.1.6, [GHSA-rj75-hqrm-r3gf](https://github.com/advisories/GHSA-rj75-hqrm-r3gf), moderate: fixed by `overrides` in `package.json`. Tailwind 3.4 asks for `^6.1.2`, and the 6.x line has no patched release. With 7.1.6 the CSS that Tailwind builds from `global.css` is byte-identical. Remove the override when no package depends on 6.x.
+- Never run `npm audit fix --force`: its fixes downgrade `react-native` to 0.72, the CLI to 13 and NativeWind to 2. Plain `npm audit fix` changes nothing useful either; it only records `lightningcss` binaries for other platforms.
+
+`npm audit signatures` verifies the registry signatures of every installed package.
+
 ## Checked by
 
 - `npm run check:deps`: allowlist and Expo scan of `package-lock.json`. Enabled in stage 3.
+- `npm audit` and `npm audit signatures` by hand when dependencies change; the accepted advisory is listed above.
 - ESLint `no-restricted-imports`: visual primitives outside `src/shared/ui`, `StatusBar` outside `src/app/index.tsx`, `SafeAreaView` and `StyleSheet` everywhere in `src`. Enabled in stage 4.

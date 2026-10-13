@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { AccessibilityInfo } from 'react-native';
 import { useAppDispatch, useAppSelector } from '@shared/lib/redux';
 import { Button, StarIcon } from '@shared/ui';
@@ -42,12 +41,12 @@ export const FavoriteToggleButton = ({ postId }: FavoriteToggleButtonProps) => {
   const isFavorite = useAppSelector(state => selectIsFavorite(state, postId));
   const appearance = APPEARANCES[isFavorite ? 'favorite' : 'regular'];
 
-  const handlePress = useCallback(() => {
+  const handlePress = () => {
     dispatch(favoriteToggled(postId));
     AccessibilityInfo.announceForAccessibility(
       appearance.announcementAfterToggle,
     );
-  }, [dispatch, postId, appearance]);
+  };
 
   return (
     <Button

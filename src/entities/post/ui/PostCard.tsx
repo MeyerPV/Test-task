@@ -1,4 +1,4 @@
-import { memo, useCallback } from 'react';
+import { memo } from 'react';
 import { View } from 'react-native';
 import { imageSize } from '@shared/theme';
 import { Badge, Card, RemoteImage, StarIcon, Typography } from '@shared/ui';
@@ -19,7 +19,7 @@ const PostCardContent = ({
   isHighlighted = false,
   badgeLabel,
 }: PostCardProps) => {
-  const handlePress = useCallback(() => onPress(post.id), [onPress, post.id]);
+  const handlePress = () => onPress(post.id);
   const accessibilityLabel = badgeLabel
     ? `${post.title}. ${badgeLabel}`
     : post.title;

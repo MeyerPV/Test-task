@@ -19,7 +19,8 @@ alwaysApply: false
 - A missing primitive is added to `src/shared/ui` as a generic component first.
 - Safe areas through `SafeAreaProvider`, `Screen` and `useSafeAreaInsets`; no `SafeAreaView` from `react-native`.
 - Buttons have visible text labels; favorite cards show the "In favorites" badge; touch targets use `min-h-touch` and `min-w-touch`.
-- The "ImageBackground is deprecated" warning comes from `react-native-css-interop`; it is known and not suppressed.
+- The "ImageBackground is deprecated" warning comes from `react-native-css-interop`; it is known and not suppressed. The Metro warning about `ReactNativeFeatureFlags` in `exports` comes from `@react-native/virtualized-lists`.
+- `npm audit`: `braces` 3.0.3 has no patched release and reaches only build tooling, so it is accepted; `postcss-selector-parser` is raised to `^7.1.6` through `overrides`. Never `npm audit fix --force`.
 
 Checks:
 - `npm run check:deps`: allowlist and Expo scan of `package-lock.json`, part of `verify`.
